@@ -1,20 +1,18 @@
-vim.opt.clipboard:append({ unnamedeplus = true })
 vim.opt.number = true
 
 vim.g.mapleader = " "
-vim.api.nvim_set_keymap("n", "<leader>p", '"_diwP', { noremap = true })
-vim.api.nvim_set_keymap("n", '<leader>"', '"_di"P', { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>p", '"_viwP', { noremap = true })
+vim.api.nvim_set_keymap("n", '<leader>"', '"_vi"P', { noremap = true })
 vim.keymap.set({ "n", "v" }, "<leader><space>", '"_', { noremap = true })
 vim.api.nvim_set_keymap("n", "Y", "y$", { noremap = true })
 
 vim.keymap.set({ "n", "v" }, "<tab>", "5j", { noremap = true })
-vim.keymap.set({ "n", "v" }, "<s-tab>", "5j", { noremap = true })
+vim.keymap.set({ "n", "v" }, "<s-tab>", "5k", { noremap = true })
 
-vim.keymap.set({ "i" }, "<c-v>", "<c-o>P", { noremap = true })
+vim.keymap.set({ "i" }, "<c-v>", "<c-r>+", { noremap = true })
 
 vim.keymap.set({ "n", "i" }, "<C-s>", "<cmd>w<CR>", { noremap = true })
 vim.keymap.set({ "c" }, "<C-v>", "<C-r><C-o>+", { noremap = true })
-
 
 vim.keymap.set({ "v" }, ">", ">gv", { noremap = true })
 vim.keymap.set({ "v" }, "<", "<gv", { noremap = true })
@@ -37,3 +35,24 @@ for _, quote in ipairs({ '"', "'", "`" }) do
     vim.keymap.set({ "x", "o" }, "a" .. quote, "2i" .. quote)
 end
 
+-- Quickfix
+vim.keymap.set({ "n" }, "<leader>n", "<cmd>cn<CR>", { noremap = true })
+vim.keymap.set({ "n" }, "<leader>b", "<cmd>cp<CR>", { noremap = true })
+local function toggle_quickfix()
+    local is_open = false
+    for _, win in ipairs(vim.fn.getwininfo()) do
+        if win.quickfix == 1 then
+            is_open = true
+            break
+        end
+    end
+
+    if is_open then
+        vim.cmd("cclose")
+    else
+        vim.cmd("copen")
+    end
+end
+
+-- キーマップを設定します。<leader>qにトグルを割り当てます。
+vim.keymap.set("n", "<leader>q", toggle_quickfix, { noremap = true, silent = true })

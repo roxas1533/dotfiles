@@ -25,6 +25,8 @@ vim.g.maplocalleader = "\\"
 require("lazy").setup({
     spec = {
         { import = "plugins" },
+        { import = "plugins/git" },
+        { import = "plugins/ui" },
     },
     -- Configure any other settings here. See the documentation for more details.
     -- colorscheme that will be used when installing plugins.
@@ -46,11 +48,11 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end,
 })
 
-vim.api.nvim_create_autocmd({"InsertLeave", "CmdlineEnter"}, {
+vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineEnter" }, {
     pattern = "*",
     group = augroup("zenhan"),
     callback = function()
-        vim.fn.jobstart({"/mnt/c/desktop/tools/zenhan.exe", "0"})
+        vim.fn.jobstart({ "/mnt/c/desktop/tools/bin/zenhan.exe", "0" })
     end,
 })
 
@@ -89,4 +91,24 @@ if false then
             }
         end
     end
+end
+
+if not vim.g.vscode then
+    vim.api.nvim_set_hl(0, "ExtraWhitespace", { bg = "red" })
+    vim.cmd([[match ExtraWhitespace /\s\+$/]])
+
+    vim.api.nvim_create_autocmd({ "BufWinEnter", "InsertLeave" }, {
+        pattern = "*",
+        callback = function()
+            local exclude = { "terminal", "prompt" }
+            if vim.tbl_contains(exclude, vim.bo.filetype) then
+                return
+            end
+            vim.cmd("match ExtraWhitespace /\\s\\+$/")
+        end,
+    })
+    vim.api.nvim_create_autocmd("BufWinLeave", {
+        pattern = "*",
+        command = "call clearmatches()",
+    })
 end

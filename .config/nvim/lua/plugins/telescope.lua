@@ -1,11 +1,9 @@
 return {
     {
         "nvim-telescope/telescope.nvim",
-        tag = "0.1.8",
         enabled = not vim.g.vscode,
-        --	cmd = "Telescope",
         keys = {
-            { "<C-p>", "<cmd>Telescope find_files<cr>", desc = "" },
+            { "<C-p>", function() require("telescope.builtin").find_files() end, desc = "" },
             {
                 "<C-S-f>",
                 '<cmd>lua require("telescope").extensions.live_grep_args.live_grep_args()<cr>',

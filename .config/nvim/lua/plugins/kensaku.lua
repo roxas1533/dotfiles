@@ -1,6 +1,6 @@
 return {
     "lambdalisue/vim-kensaku-search",
-    enable = not vim.g.vscode,
+    enabled = not vim.g.vscode,
     dependencies = {
         "lambdalisue/kensaku.vim",
         "vim-denops/denops.vim",
