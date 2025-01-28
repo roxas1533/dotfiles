@@ -2,13 +2,14 @@ return {
     {
         "nvimtools/none-ls.nvim",
         enabled = not vim.g.vscode,
-        lazy = true,
+        event = { "BufReadPre", "BufNewFile" },
         config = function()
             local null_ls = require("null-ls")
             local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
             null_ls.setup({
                 sources = {
-                    null_ls.builtins.formatting.prettier,
+                    null_ls.builtins.diagnostics.djlint,
+                    null_ls.builtins.formatting.djlint
                 },
                 on_attach = function(client, bufnr)
                     if client.supports_method("textDocument/formatting") then
@@ -26,18 +27,6 @@ return {
                 end,
             })
         end,
-    },
-    {
-        "jay-babu/mason-null-ls.nvim",
-        event = { "InsertEnter" },
-        enabled = not vim.g.vscode,
-        opts = {
-            handlers = {},
-        },
-    },
-    {
-        "williamboman/mason.nvim",
-        lazy = true,
     },
     {
         vim.api.nvim_create_user_command("ToggleFormat", function()

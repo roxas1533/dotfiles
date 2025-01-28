@@ -1,3 +1,4 @@
+vim.loader.enable()
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -25,8 +26,10 @@ vim.g.maplocalleader = "\\"
 require("lazy").setup({
     spec = {
         { import = "plugins" },
+        { import = "plugins/dap" },
         { import = "plugins/git" },
         { import = "plugins/ui" },
+        { import = "plugins/treesitter" },
     },
     -- Configure any other settings here. See the documentation for more details.
     -- colorscheme that will be used when installing plugins.
@@ -48,13 +51,13 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end,
 })
 
-vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineEnter" }, {
-    pattern = "*",
-    group = augroup("zenhan"),
-    callback = function()
-        vim.fn.jobstart({ "/mnt/c/desktop/tools/bin/zenhan.exe", "0" })
-    end,
-})
+-- vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineEnter" }, {
+--     pattern = "*",
+--     group = augroup("zenhan"),
+--     callback = function()
+--         vim.fn.jobstart({ "/mnt/c/desktop/tools/bin/zenhan.exe", "0" })
+--     end,
+-- })
 
 vim.opt["clipboard"] = "unnamedplus"
 vim.opt.shiftwidth = 4
@@ -67,6 +70,7 @@ vim.o.shell = "/usr/bin/fish"
 vim.o.cursorline = true
 vim.o.updatetime = 100
 vim.opt.scrolloff = 5
+vim.o.number = true
 
 if false then
     if vim.fn.has("wsl") == 1 then

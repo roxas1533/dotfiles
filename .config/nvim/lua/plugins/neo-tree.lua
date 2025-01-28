@@ -140,6 +140,13 @@ return {
                             desc = "upload file or directory",
                             nowait = true,
                         },
+                        -- ["ud"] ={
+                        --     function (state)
+                        --         vim.cmd("TransferUpload " .. state.tree:get_node().path)
+                        --     end,
+                        --     desc = "upload directory",
+                        --     nowait = true,
+                        -- }
                     },
                 },
                 nesting_rules = {},

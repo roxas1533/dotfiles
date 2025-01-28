@@ -6,10 +6,10 @@ vim.api.nvim_set_keymap("n", '<leader>"', '"_vi"P', { noremap = true })
 vim.keymap.set({ "n", "v" }, "<leader><space>", '"_', { noremap = true })
 vim.api.nvim_set_keymap("n", "Y", "y$", { noremap = true })
 
-vim.keymap.set({ "n", "v" }, "<tab>", "5j", { noremap = true })
 vim.keymap.set({ "n", "v" }, "<s-tab>", "5k", { noremap = true })
 
 vim.keymap.set({ "i" }, "<c-v>", "<c-r>+", { noremap = true })
+vim.keymap.set({ "n", "v" }, "<tab>", "5j", { noremap = true })
 
 vim.keymap.set({ "n", "i" }, "<C-s>", "<cmd>w<CR>", { noremap = true })
 vim.keymap.set({ "c" }, "<C-v>", "<C-r><C-o>+", { noremap = true })

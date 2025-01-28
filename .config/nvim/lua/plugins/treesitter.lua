@@ -18,6 +18,7 @@ return {
                     "python",
                     "json",
                     "rust",
+                    "htmldjango",
                 },
                 sync_install = false,
                 highlight = { enable = true },
@@ -31,7 +32,7 @@ return {
         lazy = false,
         config = function()
             require("local-highlight").setup({
-                file_types = { "lua" },
+                file_types = { "lua", "js", "py", "html" },
                 insert_mode = true,
             })
         end,

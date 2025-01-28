@@ -1,75 +1,96 @@
 return {
     {
-        "williamboman/mason-lspconfig.nvim",
+        "neovim/nvim-lspconfig",
         dependencies = {
-            -- { "echasnovski/mini.completion", version = false },
             { "onsails/lspkind-nvim" },
         },
         event = { "BufReadPre", "BufNewFile" },
         enabled = not vim.g.vscode,
         config = function()
             local lspconfig = require("lspconfig")
+            local cmp_nvim_lsp = require("cmp_nvim_lsp")
             local handlers = {
                 ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
                 ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
             }
-            require("mason").setup({})
-            --         require("mini.completion").setup({})
-            require("mason-lspconfig").setup_handlers({
-                function(server_name)
-                    lspconfig[server_name].setup({
-                        capabilities = require("cmp_nvim_lsp").default_capabilities(),
-                        handlers = handlers,
-                    })
-                end,
-                ["vtsls"] = function()
-                    lspconfig["vtsls"].setup({
-                        capabilities = require("cmp_nvim_lsp").default_capabilities(),
-                    })
-                end,
-                ["ts_ls"] = function()
-                    lspconfig["ts_ls"].setup({
-                        capabilities = require("cmp_nvim_lsp").default_capabilities(),
-                    })
-                end,
-                ["lua_ls"] = function()
-                    lspconfig["lua_ls"].setup({
-                        settings = {
-                            Lua = {
-                                diagnostics = {
-                                    globals = { "vim" },
-                                },
+            local servers = {
+                "lua_ls",
+                "ruff",
+                "basedpyright",
+                "biome",
+                "djlsp",
+                "ts_ls",
+                -- "typos_lsp"
+            }
+            local on_attach = function(on_attach)
+                vim.api.nvim_create_autocmd("LspAttach", {
+                    callback = function(args)
+                        local buffer = args.buf
+                        local client = vim.lsp.get_client_by_id(args.client_id)
+                        on_attach(client, buffer)
+                    end,
+                })
+            end
+            on_attach(function(_, buffer)
+                vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", { silent = true, buffer = buffer })
+                vim.keymap.set("n", "gf", "<cmd>lua vim.lsp.buf.format()<CR>", { silent = true, buffer = buffer })
+                vim.keymap.set("v", "gf", "<cmd>lua vim.lsp.buf.format()<CR>", { silent = true, buffer = buffer })
+                vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { silent = true, buffer = buffer })
+                vim.keymap.set(
+                    "n",
+                    "<F12>",
+                    "<cmd>lua vim.lsp.buf.definition()<CR>",
+                    { silent = true, buffer = buffer }
+                )
+                vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { silent = true, buffer = buffer })
+                vim.keymap.set(
+                    "n",
+                    "gi",
+                    "<cmd>lua vim.lsp.buf.implementation()<CR>",
+                    { silent = true, buffer = buffer }
+                )
+                vim.keymap.set(
+                    "n",
+                    "gt",
+                    "<cmd>lua vim.lsp.buf.type_definition()<CR>",
+                    { silent = true, buffer = buffer }
+                )
+                vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<CR>", { silent = true, buffer = buffer })
+                vim.keymap.set("n", "ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", { silent = true, buffer = buffer })
+                vim.keymap.set(
+                    "n",
+                    "ge",
+                    "<cmd>lua vim.diagnostic.open_float()<CR>",
+                    { silent = true, buffer = buffer }
+                )
+                vim.keymap.set("n", "g]", "<cmd>lua vim.diagnostic.goto_next()<CR>", { silent = true, buffer = buffer })
+                vim.keymap.set("n", "g[", "<cmd>lua vim.diagnostic.goto_prev()<CR>", { silent = true, buffer = buffer })
+            end)
+            for _, server in ipairs(servers) do
+                local capabilities = cmp_nvim_lsp.default_capabilities()
+                capabilities.textDocument.foldingRange = {
+                    dynamicRegistration = false,
+                    lineFoldingOnly = true,
+                }
+                local default_setup = {
+                    capabilities = capabilities,
+                    handlers = handlers,
+                }
+                if server == "lua_ls" then
+                    default_setup.settings = {
+                        Lua = {
+                            diagnostics = {
+                                globals = { "vim" },
                             },
                         },
-                    })
-                end,
-                ["typos_lsp"] = function()
-                    lspconfig["typos_lsp"].setup({
-                        cmd_env = { RUST_LOG = "error" },
-                        init_options = {
-                            diagnosticSeverity = "Error",
-                            config = "~/.config/nvim/spell/.typos.toml",
-                        },
-                    })
-                end,
-            })
-            -- vim.lsp.set_log_level("debug")
-            vim.api.nvim_create_autocmd("LspAttach", {
-                callback = function(_)
-                    vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>")
-                    vim.keymap.set("n", "gf", "<cmd>lua vim.lsp.buf.format()<CR>")
-                    vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>")
-                    vim.keymap.set("n", "<F12>", "<cmd>lua vim.lsp.buf.definition()<CR>")
-                    vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>")
-                    vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>")
-                    vim.keymap.set("n", "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>")
-                    vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<CR>")
-                    vim.keymap.set("n", "ga", "<cmd>lua vim.lsp.buf.code_action()<CR>")
-                    vim.keymap.set("n", "ge", "<cmd>lua vim.diagnostic.open_float()<CR>")
-                    vim.keymap.set("n", "g]", "<cmd>lua vim.diagnostic.goto_next()<CR>")
-                    vim.keymap.set("n", "g[", "<cmd>lua vim.diagnostic.goto_prev()<CR>")
-                end,
-            })
+                    }
+                elseif server == "ts_ls" then
+                    default_setup.on_attach = function(client, _)
+                        client.server_capabilities.documentFormattingProvider = false
+                    end
+                end
+                lspconfig[server].setup(default_setup)
+            end
 
             vim.lsp.handlers["textDocument/publishDiagnostics"] =
                 vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, { virtual_text = true })
@@ -123,28 +144,32 @@ return {
                     completion = cmp.config.window.bordered(),
                 },
             })
+            vim.diagnostic.config({
+                signs = {
+                    text = {
+                        [vim.diagnostic.severity.ERROR] = "",
+                        [vim.diagnostic.severity.WARN] = "",
+                        [vim.diagnostic.severity.INFO] = "",
+                        [vim.diagnostic.severity.HINT] = "",
+                    },
+                },
+                float = {
+                    border = "rounded"
+                }
+            })
         end,
     },
     {
         "hrsh7th/nvim-cmp",
         lazy = true,
-        dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
-        },
     },
     {
         "hrsh7th/cmp-cmdline",
         event = { "CmdlineEnter" },
-        dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
-        },
     },
     {
         "f3fora/cmp-spell",
         enabled = not vim.g.vscode,
-        dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
-        },
         config = function()
             vim.opt.spelllang = { "en_us", "cjk" }
         end,
@@ -152,21 +177,12 @@ return {
     {
         "hrsh7th/cmp-buffer",
         enabled = not vim.g.vscode,
-        dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
-        },
+    },
+    {
+        "hrsh7th/cmp-nvim-lsp",
+        lazy = true,
     },
 
-    {
-        "williamboman/mason.nvim",
-        lazy = true,
-        enabled = not vim.g.vscode,
-    },
-    {
-        "neovim/nvim-lspconfig",
-        lazy = true,
-        enabled = not vim.g.vscode,
-    },
     {
         "folke/trouble.nvim",
         opts = {},
