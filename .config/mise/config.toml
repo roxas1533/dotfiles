@@ -1,0 +1,9 @@
+[tools]
+lua-language-server = "latest"
+node = "latest"
+"pipx:basedpyright" = "latest"
+"pipx:django-template-lsp" = "latest"
+"pipx:djlint" = "latest"
+"pipx:ruff" = "latest"
+stylua = "latest"
+uv = "latest"

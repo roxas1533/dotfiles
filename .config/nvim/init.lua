@@ -71,6 +71,8 @@ vim.o.cursorline = true
 vim.o.updatetime = 100
 vim.opt.scrolloff = 5
 vim.o.number = true
+vim.opt.encoding = "utf-8"
+vim.opt.fileencodings = { "ucs-bom", "utf-8", "cp932", "sjis" }
 
 if false then
     if vim.fn.has("wsl") == 1 then
@@ -98,21 +100,30 @@ if false then
 end
 
 if not vim.g.vscode then
-    vim.api.nvim_set_hl(0, "ExtraWhitespace", { bg = "red" })
-    vim.cmd([[match ExtraWhitespace /\s\+$/]])
+    vim.fn.matchadd('ExtraWhiteSpace', [[\s\+$]])
+    -- 関数を定義して行末の空白をハイライト
+    local function highlight_extra_whitespace()
+        vim.api.nvim_set_hl(0, 'ExtraWhiteSpace', { bg = 'red' })
+    end
 
-    vim.api.nvim_create_autocmd({ "BufWinEnter", "InsertLeave" }, {
-        pattern = "*",
-        callback = function()
-            local exclude = { "terminal", "prompt" }
-            if vim.tbl_contains(exclude, vim.bo.filetype) then
-                return
-            end
-            vim.cmd("match ExtraWhitespace /\\s\\+$/")
-        end,
+    local function clear_extra_whitespace()
+        vim.api.nvim_set_hl(0, 'ExtraWhiteSpace', {})
+    end
+
+    -- スクリプトが実行されるたびにマッチをクリアし、再度設定する
+    vim.api.nvim_create_autocmd({ 'BufWinEnter', 'InsertLeave' }, {
+        pattern = '*',
+        callback = highlight_extra_whitespace,
     })
-    vim.api.nvim_create_autocmd("BufWinLeave", {
-        pattern = "*",
-        command = "call clearmatches()",
+
+    vim.api.nvim_create_autocmd({ 'BufWinLeave', 'CmdlineEnter' }, {
+        pattern = '*',
+        callback = clear_extra_whitespace,
+    })
+
+    -- コマンドラインモードを終了した後に再度ハイライト
+    vim.api.nvim_create_autocmd('CmdlineLeave', {
+        pattern = '*',
+        callback = highlight_extra_whitespace,
     })
 end
