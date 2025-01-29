@@ -1,6 +1,15 @@
 return {
     "monaqa/dial.nvim",
-    event = { "BufRead", "BufNewFile" },
+    keys = {
+        { "<C-a>",  mode = "n" },
+        { "<C-x>",  mode = "n" },
+        { "g<C-a>", mode = "n" },
+        { "g<C-x>", mode = "n" },
+        { "<C-a>",  mode = "v" },
+        { "<C-x>",  mode = "v" },
+        { "g<C-a>", mode = "v" },
+        { "g<C-x>", mode = "v" },
+    },
     config = function()
         local augend = require("dial.augend")
         require("dial.config").augends:register_group({
@@ -9,8 +18,8 @@ return {
                 augend.integer.alias.hex,
                 augend.date.alias["%Y/%m/%d"],
                 augend.constant.alias.bool,
-                augend.constant.new{
-                    elements = {"True", "False"},
+                augend.constant.new {
+                    elements = { "True", "False" },
                     word = true,
                     cyclic = true,
                 }
