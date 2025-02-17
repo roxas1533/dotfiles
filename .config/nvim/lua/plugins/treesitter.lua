@@ -21,7 +21,20 @@ return {
                     "htmldjango",
                 },
                 sync_install = false,
-                highlight = { enable = true },
+                highlight = {
+                    enable  = true,
+                    disable = function(_, buf)
+                        local max_filesize = 1024 * 1024
+                        local max_lines = 300
+
+                        local ok, status = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+                        if ok and status ~= nil then
+                            if status.size < max_filesize then
+                                return true
+                            end
+                        end
+                    end,
+                },
                 indent = { enable = true },
             })
         end,

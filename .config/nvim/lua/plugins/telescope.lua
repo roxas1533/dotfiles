@@ -3,13 +3,34 @@ return {
         "nvim-telescope/telescope.nvim",
         enabled = not vim.g.vscode,
         keys = {
-            { "<C-p>", function() require("telescope.builtin").find_files() end, desc = "" },
+            -- { "<C-p>", function() require("telescope.builtin").find_files() end, desc = "" },
+            -- {
+            --     "<C-p>",
+            --     function()
+            --         require("telescope").extensions.smart_open.smart_open {
+            --             filename_first = false,
+            --         }
+            --     end,
+            --     desc = ""
+            -- },
+            -- {
+            --     "<C-S-f>",
+            --     '<cmd>lua require("telescope").extensions.live_grep_args.live_grep_args()<cr>',
+            --     desc = "Find file",
+            -- },
             {
-                "<C-S-f>",
-                '<cmd>lua require("telescope").extensions.live_grep_args.live_grep_args()<cr>',
-                desc = "Find file",
+                "<leader>h",
+                function()
+                    require("telescope.builtin").command_history(
+                        {
+                            filter_fn = function(entry)
+                                return #entry > 3
+                            end
+                        }
+                    )
+                end,
+                desc = ""
             },
-            --{ "n", "<leader>fb", builtin.buffers, {} },
             --{ "n", "<leader>fh", builtin.help_tags, {} },
         },
         config = function()
@@ -38,6 +59,7 @@ return {
                 },
             })
             telescope.load_extension("live_grep_args")
+            telescope.load_extension("fzy_native")
         end,
     },
     {
@@ -48,4 +70,19 @@ return {
         "nvim-telescope/telescope-live-grep-args.nvim",
         lazy = true,
     },
+    {
+        "nvim-telescope/telescope-fzy-native.nvim",
+        lazy = true,
+    },
+    {
+        "danielfalk/smart-open.nvim",
+        enabled = false,
+        config = function()
+            require("telescope").load_extension("smart_open")
+        end
+    },
+    {
+        "kkharji/sqlite.lua",
+        lazy = true,
+    }
 }

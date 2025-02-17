@@ -6,7 +6,7 @@ return {
         { "<F8>", "<cmd>OverseerToggle<cr>" },
     },
     opts ={
-            templates = { "builtin", "user.cp" },
+            templates = { "builtin" },
             form = {
                 -- border = "rounded",
                 -- zindex = 40,

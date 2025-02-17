@@ -15,3 +15,6 @@ function cdw
     set dir (echo $argv[1] | sed -e 's,\(.\):,/mnt/\L\1,' -e 's,\\\\,/,g')
     cd $dir
 end
+/usr/sbin/mise activate fish | source
+set LANG ja_JP.UTF-8
+set DISPLAY :0

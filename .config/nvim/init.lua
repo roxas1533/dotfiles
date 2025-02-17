@@ -127,3 +127,13 @@ if not vim.g.vscode then
         callback = highlight_extra_whitespace,
     })
 end
+
+vim.diagnostic.config({
+    signs = true,
+    underline = true,
+    update_in_insert = true,
+})
+vim.cmd [[highlight DiagnosticUnderlineError guisp=#FF0000 gui=undercurl]]
+vim.cmd [[highlight DiagnosticUnderlineWarn guisp=#FFA500 gui=undercurl]]
+vim.cmd [[highlight DiagnosticUnderlineInfo guisp=#00FFFF gui=underline]]
+vim.cmd [[highlight DiagnosticUnderlineHint guisp=#00FF00 gui=underdotted]]

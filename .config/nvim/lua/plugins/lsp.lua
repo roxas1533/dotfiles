@@ -18,15 +18,19 @@ return {
                 "ruff",
                 "basedpyright",
                 "biome",
-                "djlsp",
+                -- "djlsp",
                 "ts_ls",
                 -- "typos_lsp"
             }
             local on_attach = function(on_attach)
+                local max_filesize = 1024 * 1024
                 vim.api.nvim_create_autocmd("LspAttach", {
                     callback = function(args)
                         local buffer = args.buf
                         local client = vim.lsp.get_client_by_id(args.client_id)
+                        if vim.fn.getfsize(vim.api.nvim_buf_get_name(buffer)) > max_filesize then
+                            return
+                        end
                         on_attach(client, buffer)
                     end,
                 })
@@ -93,7 +97,8 @@ return {
             end
 
             vim.lsp.handlers["textDocument/publishDiagnostics"] =
-                vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, { virtual_text = true })
+                vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
+                    { virtual_text = true, underline = true, signs = true, update_in_insert = true })
             local cmp = require("cmp")
             cmp.setup.cmdline(":", {
                 mapping = cmp.mapping.preset.cmdline(),
