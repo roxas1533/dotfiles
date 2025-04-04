@@ -10,7 +10,6 @@ return {
             local lspconfig = require("lspconfig")
             local cmp_nvim_lsp = require("cmp_nvim_lsp")
             local handlers = {
-                ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
                 ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
             }
             local servers = {
@@ -206,5 +205,27 @@ return {
                 -- stylua: ignore
             })
         end,
+    },
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "VeryLazy",
+        priority = 1000,
+        config = function()
+            require('tiny-inline-diagnostic').setup({
+                options = {
+                    show_source = true,
+                    show_all_diags_on_cursorline = true,
+                    multilines = {
+                        enabled = true,
+                        always_show = true,
+                    },
+                    -- show_diagnostic_number = true,
+                    -- show_diagnostic_count = true,
+                    -- show_diagnostic_icon = true,
+                    -- show_diagnostic_message = true,
+                },
+            })
+            -- vim.diagnostic.config({ virtual_text = false, options = { show_source = true } })
+        end
     },
 }

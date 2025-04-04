@@ -7,6 +7,9 @@ return {
         version = "*",
         opts = {
             provider = "copilot",
+            copilot = {
+                model = "claude-3.7-sonnet",
+            },
             auto_suggestions_provider = "copilot",
         },
         build = "make",

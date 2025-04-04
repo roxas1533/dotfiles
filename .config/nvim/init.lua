@@ -26,7 +26,7 @@ vim.g.maplocalleader = "\\"
 require("lazy").setup({
     spec = {
         { import = "plugins" },
-        { import = "plugins/dap" },
+        -- { import = "plugins/dap" },
         { import = "plugins/git" },
         { import = "plugins/ui" },
         { import = "plugins/treesitter" },

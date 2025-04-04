@@ -4,6 +4,7 @@ vim.g.mapleader = " "
 vim.api.nvim_set_keymap("n", "<leader>p", '"_viwP', { noremap = true })
 vim.api.nvim_set_keymap("n", '<leader>"', '"_vi"P', { noremap = true })
 vim.keymap.set({ "n", "v" }, "<leader><space>", '"_', { noremap = true })
+vim.keymap.set({ "n", "v" }, "<leader>dd", '"_dd', { noremap = true })
 vim.api.nvim_set_keymap("n", "Y", "y$", { noremap = true })
 
 vim.keymap.set({ "n", "v" }, "<s-tab>", "5k", { noremap = true })
@@ -27,7 +28,7 @@ vim.keymap.set({ "n" }, "i", function()
     end
 end, { expr = true, noremap = true })
 
-vim.keymap.set({ "n" }, "/", "/\\V", { noremap = true })
+-- vim.keymap.set({ "n" }, "/", "/\\V", { noremap = true })
 vim.keymap.set({ "n" }, "p", "]p", { noremap = true })
 vim.keymap.set({ "n" }, "P", "]P", { noremap = true })
 
@@ -54,5 +55,4 @@ local function toggle_quickfix()
     end
 end
 
--- キーマップを設定します。<leader>qにトグルを割り当てます。
 vim.keymap.set("n", "<leader>q", toggle_quickfix, { noremap = true, silent = true })
