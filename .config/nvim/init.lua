@@ -66,13 +66,13 @@ vim.opt.expandtab = true
 vim.o.termguicolors = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
-vim.o.shell = "/usr/bin/fish"
 vim.o.cursorline = true
 vim.o.updatetime = 100
 vim.opt.scrolloff = 5
 vim.o.number = true
 vim.opt.encoding = "utf-8"
 vim.opt.fileencodings = { "ucs-bom", "utf-8", "cp932", "sjis" }
+vim.o.shell = "fish"
 
 if false then
     if vim.fn.has("wsl") == 1 then

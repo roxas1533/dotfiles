@@ -5,7 +5,6 @@ return {
 	event = "VeryLazy",
 	config = function()
 		local toggleterm = require("toggleterm")
-		vim.o.shell = "/usr/bin/fish"
 		toggleterm.setup({
 			size = 20,
 			open_mapping = [[<C-t>]],

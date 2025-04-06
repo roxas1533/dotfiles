@@ -5,8 +5,6 @@ if status is-interactive
     set -x LD_LIBRARY_PATH /usr/lib/wsl/lib
 end
 alias vim="nvim"
-set -x DENO_INSTALL ~/.deno
-set -x PATH $DENO_INSTALL/bin:$PATH
 
 set EDITOR nvim
 alias se="export EDITOR=$EDITOR; sudoedit"
@@ -15,6 +13,13 @@ function cdw
     set dir (echo $argv[1] | sed -e 's,\(.\):,/mnt/\L\1,' -e 's,\\\\,/,g')
     cd $dir
 end
-/usr/sbin/mise activate fish | source
+if test -x /usr/bin/mise
+    /usr/sbin/mise activate fish | source
+end
+
+if type -q direnv
+    direnv hook fish | source
+end
+
 set LANG ja_JP.UTF-8
 set DISPLAY :0

@@ -19,6 +19,8 @@ return {
                 "biome",
                 -- "djlsp",
                 "ts_ls",
+                "nil_ls",
+                "rust_analyzer"
                 -- "typos_lsp"
             }
             local on_attach = function(on_attach)
@@ -75,6 +77,7 @@ return {
                     dynamicRegistration = false,
                     lineFoldingOnly = true,
                 }
+                capabilities.textDocument.documentColor = nil;
                 local default_setup = {
                     capabilities = capabilities,
                     handlers = handlers,
@@ -91,6 +94,14 @@ return {
                     default_setup.on_attach = function(client, _)
                         client.server_capabilities.documentFormattingProvider = false
                     end
+                elseif  server == "rust_analyzer" then
+                    default_setup.settings = {
+                        ["rust-analyzer"] = {
+                            check = {
+                                command = "clippy",
+                            },
+                        },
+                    }
                 end
                 lspconfig[server].setup(default_setup)
             end
