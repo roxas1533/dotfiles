@@ -13,10 +13,10 @@
 }:
 
 {
-  #  imports = [
-  #    # include NixOS-WSL modules
-  #    <nixos-wsl/modules>
-  #  ];
+  # imports = [
+  #   # include NixOS-WSL modules
+  #   <nixos-wsl/modules>
+  # ];
 
   nix.settings.experimental-features = [
     "nix-command"
@@ -25,7 +25,7 @@
 
   wsl.enable = true;
   wsl.defaultUser = "ro";
-  virtualisation.docker.enable = true;
+  virtualisation.docker.enable = false;
 
   environment.systemPackages = with pkgs; [
     neovim
@@ -51,6 +51,8 @@
     shell = pkgs.fish;
     hashedPassword = "$y$j9T$QRezdLXPE44Zrgr39Sk.a/$GoopaJdSpCPXdF0sl1X7Qim3QAoDbdWOQXSOkyuzNIC";
   };
+  i18n.defaultLocale = "ja_JP.UTF-8";
+  time.timeZone = "Asia/Tokyo";
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -58,5 +60,5 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
 }

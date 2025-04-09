@@ -1,5 +1,6 @@
 return {
     "luukvbaal/statuscol.nvim",
+    enabled = true,
     event = { "BufReadPre", "BufNewFile" },
     config = function()
         local builtin = require("statuscol.builtin")
@@ -7,14 +8,18 @@ return {
             segments = {
                 { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
                 {
-                    sign = { namespace = { "diagnostic/signs" }, maxwidth = 2, auto = true },
-                    click = "v:lua.ScSa"
+                    sign = {  maxwidth = 1, namespace = { "diagnostic.signs" } },
+                    click = "v:lua.ScSa",
                 },
-                { text = { builtin.lnumfunc }, click = "v:lua.ScLa", },
                 {
-                    sign = { name = { ".*" }, maxwidth = 2, colwidth = 1, auto = true, wrap = true },
-                    click = "v:lua.ScSa"
+                    sign = {
+                        namespace = { 'gitsigns' },
+                        maxwidth = 1,
+                        colwidth = 1,
+                        wrap = true,
+                    },
                 },
+                { text = { builtin.lnumfunc } },
             }
         })
     end,

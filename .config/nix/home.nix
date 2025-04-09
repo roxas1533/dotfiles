@@ -6,10 +6,12 @@
 
   home.packages = with pkgs; [
     deno
+    bun
     ripgrep
     lua
     luarocks
     gcc
+    gnumake
     yazi
     docker
 
@@ -38,5 +40,5 @@
       nix-direnv.enable = true;
     };
   };
-  home.stateVersion = "24.11";
+  home.stateVersion = "25.05";
 }

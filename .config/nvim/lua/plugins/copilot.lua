@@ -4,7 +4,7 @@ return {
         event = "VeryLazy",
         lazy = false,
         enabled = not vim.g.vscode,
-        version = "*",
+        version = false,
         opts = {
             provider = "copilot",
             copilot = {

@@ -13,6 +13,8 @@ function cdw
     set dir (echo $argv[1] | sed -e 's,\(.\):,/mnt/\L\1,' -e 's,\\\\,/,g')
     cd $dir
 end
+
+
 if test -x /usr/bin/mise
     /usr/sbin/mise activate fish | source
 end
