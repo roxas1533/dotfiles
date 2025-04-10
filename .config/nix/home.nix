@@ -31,6 +31,7 @@
     fishPlugins.tide
 
     glibc.static
+    gh
   ];
   programs = {
     home-manager.enable = true;

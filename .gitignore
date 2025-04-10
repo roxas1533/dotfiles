@@ -4,3 +4,4 @@
 .config/.wrangler/
 .config/direnv/
 .config/environment.d
+.config/gh/
