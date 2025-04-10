@@ -20,8 +20,8 @@ return {
                 -- "djlsp",
                 "ts_ls",
                 "nil_ls",
-                "rust_analyzer"
-                -- "typos_lsp"
+                "rust_analyzer",
+                "typos_lsp"
             }
             local on_attach = function(on_attach)
                 local max_filesize = 1024 * 1024

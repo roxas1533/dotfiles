@@ -6,7 +6,6 @@
 
   home.packages = with pkgs; [
     deno
-    bun
     ripgrep
     lua
     luarocks
@@ -21,6 +20,7 @@
     biome
     rust-analyzer
     clippy
+    typos-lsp
 
     # nix関連
     nil

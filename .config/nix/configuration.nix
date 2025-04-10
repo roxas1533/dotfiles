@@ -6,8 +6,6 @@
 # https://github.com/nix-community/NixOS-WSL
 
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
@@ -28,6 +26,7 @@
   virtualisation.docker.enable = false;
 
   environment.systemPackages = with pkgs; [
+    wget
     neovim
     fish
     git
