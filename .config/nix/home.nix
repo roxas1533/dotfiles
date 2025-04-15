@@ -13,6 +13,8 @@
     gnumake
     yazi
     docker
+    lazygit
+    gh
 
     # lsp
     lua-language-server
@@ -31,7 +33,6 @@
     fishPlugins.tide
 
     glibc.static
-    gh
   ];
   programs = {
     home-manager.enable = true;

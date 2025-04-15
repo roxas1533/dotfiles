@@ -37,5 +37,9 @@ return {
             file_types = { "markdown", "Avante" },
         },
         ft = { "markdown", "Avante" },
-    }
+    },
+    {
+        "nvim-lua/plenary.nvim",
+        lazy = true,
+    },
 }
