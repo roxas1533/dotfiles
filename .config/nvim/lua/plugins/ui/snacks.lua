@@ -16,6 +16,9 @@ return {
                     preset = "telescope",
                 }
             },
+            dashboard = {
+                enable = true,
+            },
         },
         keys = {
             { "<C-p>", function() require("snacks.picker").smart() end, desc = "Find file" },

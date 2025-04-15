@@ -21,8 +21,16 @@
     "flakes"
   ];
 
-  wsl.enable = true;
-  wsl.defaultUser = "ro";
+  wsl = {
+    enable = true;
+    defaultUser = "ro";
+    wslConf = {
+      boot.command = ''
+        ln -s /mnt/wslg/runtime-dir/wayland-0* "$XDG_RUNTIME_DIR"
+      '';
+    };
+  };
+
   virtualisation.docker.enable = false;
 
   environment.systemPackages = with pkgs; [
@@ -33,7 +41,6 @@
     lsof
     wl-clipboard
     nodejs
-
   ];
 
   programs.fish.enable = true;

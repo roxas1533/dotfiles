@@ -36,6 +36,13 @@ require("lazy").setup({
     install = { colorscheme = { "everforest" } },
     -- automatically check for plugin updates
     checker = { enabled = true },
+    ui = {
+        border = "rounded",
+        size = {
+            width = 0.8,
+            height = 0.8,
+        },
+    },
 })
 require("keymap")
 
@@ -99,34 +106,6 @@ if false then
     end
 end
 
-if not vim.g.vscode then
-    vim.fn.matchadd('ExtraWhiteSpace', [[\s\+$]])
-    -- 関数を定義して行末の空白をハイライト
-    local function highlight_extra_whitespace()
-        vim.api.nvim_set_hl(0, 'ExtraWhiteSpace', { bg = 'red' })
-    end
-
-    local function clear_extra_whitespace()
-        vim.api.nvim_set_hl(0, 'ExtraWhiteSpace', {})
-    end
-
-    -- スクリプトが実行されるたびにマッチをクリアし、再度設定する
-    vim.api.nvim_create_autocmd({ 'BufWinEnter', 'InsertLeave' }, {
-        pattern = '*',
-        callback = highlight_extra_whitespace,
-    })
-
-    vim.api.nvim_create_autocmd({ 'BufWinLeave', 'CmdlineEnter' }, {
-        pattern = '*',
-        callback = clear_extra_whitespace,
-    })
-
-    -- コマンドラインモードを終了した後に再度ハイライト
-    vim.api.nvim_create_autocmd('CmdlineLeave', {
-        pattern = '*',
-        callback = highlight_extra_whitespace,
-    })
-end
 
 vim.diagnostic.config({
     signs = true,
