@@ -5,14 +5,19 @@ return {
         require("hlchunk").setup({
             chunk = {
                 enable = true,
-                use_treesitter = true,
-                chars = {
-                    horizontal_line = "━",
-                    vertical_line = "┃",
-                    left_top = "┏",
-                    left_bottom = "┗",
-                    right_arrow = ">",
+                priority = 1000,
+                style = {
+                    { fg = "#ffffff", },
+                    { fg = "#c21f30", },
                 },
+                use_treesitter = true,
+                -- chars = {
+                --     horizontal_line = "━",
+                --     vertical_line = "┃",
+                --     left_top = "┏",
+                --     left_bottom = "┗",
+                --     right_arrow = ">",
+                -- },
             },
         })
     end,

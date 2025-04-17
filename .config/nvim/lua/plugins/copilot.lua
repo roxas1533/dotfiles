@@ -33,6 +33,7 @@ return {
     {
         "MeanderingProgrammer/render-markdown.nvim",
         lazy = true,
+        enabled = not vim.g.vscode,
         opts = {
             file_types = { "markdown", "Avante" },
         },

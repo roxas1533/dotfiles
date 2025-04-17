@@ -5,3 +5,4 @@
 .config/direnv/
 .config/environment.d
 .config/gh/
+.config/fontconfig/

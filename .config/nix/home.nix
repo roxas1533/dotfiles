@@ -32,6 +32,9 @@
     fishPlugins.z
     fishPlugins.tide
 
+    # gh extensions
+    gh-copilot
+
     glibc.static
   ];
   programs = {

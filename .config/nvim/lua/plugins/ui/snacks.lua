@@ -14,15 +14,18 @@ return {
                 enable = true,
                 layout = {
                     preset = "telescope",
-                }
+                },
+                sources = {
+                    files = { hidden = false },
+                },
             },
             dashboard = {
                 enable = true,
             },
         },
         keys = {
-            { "<C-p>", function() require("snacks.picker").smart() end, desc = "Find file" },
-            { "<C-S-f>", function() require("snacks.picker").grep() end, desc = "Find file" }
+            { "<C-p>",   function() require("snacks.picker").smart() end, desc = "Find file" },
+            { "<C-S-f>", function() require("snacks.picker").grep() end,  desc = "Live grep" }
         }
     }
 }

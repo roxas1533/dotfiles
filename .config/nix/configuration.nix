@@ -33,6 +33,11 @@
 
   virtualisation.docker.enable = false;
 
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (pkgs.lib.getName pkg) [
+      "gh-copilot"
+    ];
   environment.systemPackages = with pkgs; [
     wget
     neovim
