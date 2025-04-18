@@ -21,6 +21,21 @@ return {
                     --     return false
                     -- end,
                 },
+                ensure_installed = {
+                    "bash",
+                    "c",
+                    "cpp",
+                    "css",
+                    "html",
+                    "javascript",
+                    "json",
+                    "lua",
+                    "markdown",
+                    "markdown_inline",
+                    "python",
+                    "rust",
+                    "typescript",
+                },
                 indent = { enable = true },
             })
         end,

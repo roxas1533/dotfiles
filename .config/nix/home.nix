@@ -35,6 +35,9 @@
     # gh extensions
     gh-copilot
 
+    # git
+    delta
+
     glibc.static
   ];
   programs = {
