@@ -33,7 +33,6 @@ require("lazy").setup({
     },
     -- Configure any other settings here. See the documentation for more details.
     -- colorscheme that will be used when installing plugins.
-    install = { colorscheme = { "everforest" } },
     -- automatically check for plugin updates
     checker = { enabled = true },
     ui = {
@@ -116,3 +115,5 @@ vim.cmd [[highlight DiagnosticUnderlineError guisp=#FF0000 gui=undercurl]]
 vim.cmd [[highlight DiagnosticUnderlineWarn guisp=#FFA500 gui=undercurl]]
 vim.cmd [[highlight DiagnosticUnderlineInfo guisp=#00FFFF gui=underline]]
 vim.cmd [[highlight DiagnosticUnderlineHint guisp=#00FF00 gui=underdotted]]
+
+vim.cmd([[autocmd FileType * set formatoptions-=ro]])

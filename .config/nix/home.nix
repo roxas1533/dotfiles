@@ -15,6 +15,8 @@
     docker
     lazygit
     gh
+    sshpass
+    claude-code
 
     # lsp
     lua-language-server

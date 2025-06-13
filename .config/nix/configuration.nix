@@ -37,6 +37,7 @@
     pkg:
     builtins.elem (pkgs.lib.getName pkg) [
       "gh-copilot"
+      "claude-code"
     ];
   environment.systemPackages = with pkgs; [
     wget

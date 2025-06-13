@@ -17,6 +17,11 @@ return {
                 },
                 sources = {
                     files = { hidden = false },
+                    recent = {
+                        filter = {
+                            cwd = true
+                        }
+                    },
                 },
             },
             dashboard = {

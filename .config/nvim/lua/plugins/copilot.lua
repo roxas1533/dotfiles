@@ -2,8 +2,7 @@ return {
     {
         "yetone/avante.nvim",
         event = "VeryLazy",
-        lazy = false,
-        enabled = not vim.g.vscode,
+        enabled = false,
         version = false,
         opts = {
             provider = "copilot",
@@ -15,11 +14,26 @@ return {
         build = "make",
     },
     {
+        "greggh/claude-code.nvim",
+        config = function()
+            require("claude-code").setup({
+                keymaps = {
+                    toggle ={
+                        normal = "<leader>ae",
+                        terminal = "<leader>ae",
+                    }
+                },
+            })
+        end
+    },
+    {
         "zbirenbaum/copilot.lua",
         enabled = not vim.g.vscode,
-        lazy = false,
+        cmd = { "Copilot" },
+        event = "InsertEnter",
         config = function()
             require("copilot").setup({
+                copilot_model = "gpt-4o-copilot",
                 suggestion = {
                     enabled = true,
                     auto_trigger = true,

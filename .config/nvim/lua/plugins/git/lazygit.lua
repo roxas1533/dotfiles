@@ -10,8 +10,7 @@ return {
         "LazyGitFilterHistory",
         "LazyGitFilterHistoryCurrentFile",
     },
-    event = { "BufRead", "BufNewFile" },
     keys = {
         { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
-    }
+    },
 }

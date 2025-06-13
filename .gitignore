@@ -6,3 +6,4 @@
 .config/environment.d
 .config/gh/
 .config/fontconfig/
+fish_variables

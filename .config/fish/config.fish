@@ -5,7 +5,6 @@ if status is-interactive
     set -x LD_LIBRARY_PATH /usr/lib/wsl/lib
 end
 alias vim="nvim"
-
 set EDITOR nvim
 alias se="export EDITOR=$EDITOR; sudoedit"
 
@@ -14,13 +13,22 @@ function cdw
     cd $dir
 end
 
-
-if test -x /usr/bin/mise
-    /usr/sbin/mise activate fish | source
+function setWsl
+    if test ! -S "$XDG_RUNTIME_DIR/wayland-0"
+        ln -s /mnt/wslg/runtime-dir/wayland-0* "$XDG_RUNTIME_DIR"
+    end
 end
 
 if type -q direnv
     direnv hook fish | source
+end
+
+alias setwsl="setWsl"
+
+function fullpath
+    set full_path (realpath $argv[1])
+    echo $full_path
+    echo $full_path | wl-copy
 end
 
 set LANG ja_JP.UTF-8
