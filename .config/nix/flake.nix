@@ -5,7 +5,6 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
   outputs =
@@ -14,7 +13,6 @@
       nixpkgs,
       nixos-wsl,
       home-manager,
-      rust-overlay,
       ...
     }@inputs:
     {
@@ -34,17 +32,6 @@
             home-manager.useUserPackages = true;
             home-manager.users.ro = import ./home.nix;
           }
-          (
-            { pkgs, ... }:
-            {
-              nixpkgs.overlays = [ rust-overlay.overlays.default ];
-              environment.systemPackages = [
-                pkgs.rust-bin.stable.latest.default
-              ];
-
-            }
-          )
-
         ];
       };
     };

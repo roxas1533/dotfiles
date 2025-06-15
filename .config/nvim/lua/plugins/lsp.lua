@@ -32,6 +32,9 @@ return {
                         if vim.fn.getfsize(vim.api.nvim_buf_get_name(buffer)) > max_filesize then
                             return
                         end
+                        if vim.lsp.inlay_hint then
+                            vim.lsp.inlay_hint.enable(true, { 0 })
+                        end
                         on_attach(client, buffer)
                     end,
                 })
@@ -94,7 +97,7 @@ return {
                     default_setup.on_attach = function(client, _)
                         client.server_capabilities.documentFormattingProvider = false
                     end
-                elseif  server == "rust_analyzer" then
+                elseif server == "rust_analyzer" then
                     default_setup.settings = {
                         ["rust-analyzer"] = {
                             check = {

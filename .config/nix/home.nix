@@ -22,8 +22,6 @@
     lua-language-server
     typescript-language-server
     biome
-    rust-analyzer
-    clippy
     typos-lsp
 
     # nix関連
@@ -40,7 +38,7 @@
     # git
     delta
 
-    glibc.static
+    rustup
   ];
   programs = {
     home-manager.enable = true;
