@@ -31,7 +31,7 @@
     };
   };
 
-  virtualisation.docker.enable = false;
+  virtualisation.docker.enable = true;
 
   nixpkgs.config.allowUnfreePredicate =
     pkg:

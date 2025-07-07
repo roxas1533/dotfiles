@@ -17,6 +17,7 @@
     gh
     sshpass
     claude-code
+    gemini-cli
 
     # lsp
     lua-language-server
@@ -39,6 +40,11 @@
     delta
 
     rustup
+    glibc.static
+
+    #mcp server
+    (callPackage ./packages/mcp-server-mysql.nix { })
+    github-mcp-server
   ];
   programs = {
     home-manager.enable = true;
