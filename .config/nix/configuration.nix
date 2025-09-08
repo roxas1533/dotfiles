@@ -63,6 +63,10 @@
     shell = pkgs.fish;
     hashedPassword = "$y$j9T$QRezdLXPE44Zrgr39Sk.a/$GoopaJdSpCPXdF0sl1X7Qim3QAoDbdWOQXSOkyuzNIC";
   };
+
+  security.pki.certificateFiles = [
+    ./sharedpx_ca_sha2.crt
+  ];
   i18n.defaultLocale = "ja_JP.UTF-8";
   time.timeZone = "Asia/Tokyo";
 

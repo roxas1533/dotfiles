@@ -19,6 +19,8 @@
     claude-code
     gemini-cli
 
+    # unar
+
     # lsp
     lua-language-server
     typescript-language-server

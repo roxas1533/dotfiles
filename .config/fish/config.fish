@@ -5,7 +5,7 @@ if status is-interactive
     set -x LD_LIBRARY_PATH /usr/lib/wsl/lib
 end
 alias vim="nvim"
-set EDITOR nvim
+set -x EDITOR nvim
 alias se="export EDITOR=$EDITOR; sudoedit"
 
 function cdw
@@ -31,5 +31,6 @@ function fullpath
     echo $full_path | wl-copy
 end
 
-set LANG ja_JP.UTF-8
-set DISPLAY :0
+set -x LANG ja_JP.UTF-8
+set -x DISPLAY :0
+set -x DENO_TLS_CA_STORE system

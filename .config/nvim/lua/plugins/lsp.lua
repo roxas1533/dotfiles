@@ -80,7 +80,7 @@ return {
                     dynamicRegistration = false,
                     lineFoldingOnly = true,
                 }
-                capabilities.textDocument.documentColor = nil;
+                -- capabilities.textDocument.documentColor = nil;
                 local default_setup = {
                     capabilities = capabilities,
                     handlers = handlers,
