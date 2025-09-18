@@ -1,5 +1,6 @@
 gui:
   nerdFontsVersion: "3"
+  tabSize: 4
 git:
   paging:
     colorArg: always

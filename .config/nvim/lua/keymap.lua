@@ -37,7 +37,8 @@ for _, quote in ipairs({ '"', "'", "`" }) do
 end
 
 -- Quickfix
-vim.keymap.set({ "n" }, "[", "<cmd>cn<CR>", { noremap = true })
+vim.keymap.set({ "n" }, "[", "<cmd>cn<CR>", { noremap = true, nowait = true })
+vim.keymap.set({ "n" }, "]", "<cmd>cn<CR>", { noremap = true, nowait = true })
 vim.keymap.set({ "n" }, "<C-[>", "<cmd>cp<CR>", { noremap = true })
 local function toggle_quickfix()
     local is_open = false

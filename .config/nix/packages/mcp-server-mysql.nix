@@ -13,7 +13,7 @@ pkgs.buildNpmPackage {
     owner = "benborla";
     repo = "mcp-server-mysql";
     rev = "main";
-    sha256 = "sha256-vd32WuWkjEiu45mTPnlGBctliGlNFaZTV4yi9KdZuBs=";
+    sha256 = "sha256-fE6w0Os7Q5vPidS4UuhE87okckTngYu14KBF9Y16l8U=";
   };
 
   npmDepsHash = "sha256-lLXN14NayJowzHKjunBd+cJP0E+w/xALBaiuytVph/k=";

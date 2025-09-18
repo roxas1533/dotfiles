@@ -7,7 +7,6 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         enabled = not vim.g.vscode,
         config = function()
-            local lspconfig = require("lspconfig")
             local cmp_nvim_lsp = require("cmp_nvim_lsp")
             local handlers = {
                 ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
@@ -21,7 +20,8 @@ return {
                 "ts_ls",
                 "nil_ls",
                 "rust_analyzer",
-                "typos_lsp"
+                "typos_lsp",
+                "prettier",
             }
             local on_attach = function(on_attach)
                 local max_filesize = 1024 * 1024
@@ -74,19 +74,19 @@ return {
                 vim.keymap.set("n", "g]", "<cmd>lua vim.diagnostic.goto_next()<CR>", { silent = true, buffer = buffer })
                 vim.keymap.set("n", "g[", "<cmd>lua vim.diagnostic.goto_prev()<CR>", { silent = true, buffer = buffer })
             end)
+            local capabilities = cmp_nvim_lsp.default_capabilities()
+            capabilities.textDocument.foldingRange = {
+                dynamicRegistration = false,
+                lineFoldingOnly = true,
+            }
+            local default_setup = {
+                capabilities = capabilities,
+                handlers = handlers,
+            }
             for _, server in ipairs(servers) do
-                local capabilities = cmp_nvim_lsp.default_capabilities()
-                capabilities.textDocument.foldingRange = {
-                    dynamicRegistration = false,
-                    lineFoldingOnly = true,
-                }
-                -- capabilities.textDocument.documentColor = nil;
-                local default_setup = {
-                    capabilities = capabilities,
-                    handlers = handlers,
-                }
+                local config = { settings = {} }
                 if server == "lua_ls" then
-                    default_setup.settings = {
+                    config.settings = {
                         Lua = {
                             diagnostics = {
                                 globals = { "vim" },
@@ -94,11 +94,13 @@ return {
                         },
                     }
                 elseif server == "ts_ls" then
-                    default_setup.on_attach = function(client, _)
-                        client.server_capabilities.documentFormattingProvider = false
-                    end
+                    config.settings = {
+                        on_attach = function(client, _)
+                            client.server_capabilities.documentFormattingProvider = false
+                        end
+                    }
                 elseif server == "rust_analyzer" then
-                    default_setup.settings = {
+                    config.settings = {
                         ["rust-analyzer"] = {
                             check = {
                                 command = "clippy",
@@ -106,8 +108,10 @@ return {
                         },
                     }
                 end
-                lspconfig[server].setup(default_setup)
+                vim.lsp.config(server, config)
+                vim.lsp.enable(server)
             end
+            vim.lsp.config("*", default_setup)
 
             vim.lsp.handlers["textDocument/publishDiagnostics"] =
                 vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
