@@ -75,10 +75,10 @@ return {
                 vim.keymap.set("n", "g[", "<cmd>lua vim.diagnostic.goto_prev()<CR>", { silent = true, buffer = buffer })
             end)
             local capabilities = cmp_nvim_lsp.default_capabilities()
-            capabilities.textDocument.foldingRange = {
-                dynamicRegistration = false,
-                lineFoldingOnly = true,
-            }
+            -- capabilities.textDocument.foldingRange = {
+            --     dynamicRegistration = false,
+            --     lineFoldingOnly = true,
+            -- }
             local default_setup = {
                 capabilities = capabilities,
                 handlers = handlers,
@@ -94,11 +94,10 @@ return {
                         },
                     }
                 elseif server == "ts_ls" then
-                    config.settings = {
-                        on_attach = function(client, _)
-                            client.server_capabilities.documentFormattingProvider = false
-                        end
-                    }
+                    config.on_attach = function(client, _)
+                        client.server_capabilities.documentFormattingProvider = false
+                    end
+                    config.settings = {}
                 elseif server == "rust_analyzer" then
                     config.settings = {
                         ["rust-analyzer"] = {

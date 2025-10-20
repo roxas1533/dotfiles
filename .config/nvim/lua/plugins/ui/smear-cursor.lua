@@ -1,5 +1,7 @@
 return {
     "sphamba/smear-cursor.nvim",
     event = "BufRead",
-    opts = {},
+    opts = {
+        smear_terminal_mode = false,
+    },
 }

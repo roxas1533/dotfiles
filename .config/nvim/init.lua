@@ -70,6 +70,7 @@ vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.opt.expandtab = true
 vim.o.termguicolors = true
+vim.o.guicursor = vim.o.guicursor .. ',c:ver25'
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.cursorline = true
