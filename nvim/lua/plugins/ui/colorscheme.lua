@@ -36,6 +36,11 @@ return {
                 transparent = true,
             })
             require("onedark").load()
+
+            -- Make borders transparent
+            vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
+            vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+            vim.api.nvim_set_hl(0, "WinSeparator", { bg = "none" })
         end,
     },
 }
