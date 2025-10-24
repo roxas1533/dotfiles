@@ -18,6 +18,7 @@
     sshpass
     claude-code
     gemini-cli
+    cloudflared
 
     # unar
 

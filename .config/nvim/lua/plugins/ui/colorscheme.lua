@@ -26,16 +26,16 @@ return {
         end,
     },
     {
-        "scottmckendry/cyberdream.nvim",
+        "navarasu/onedark.nvim",
         enabled = not vim.g.vscode,
         lazy = false,
         priority = 1000,
         config = function()
-            require("cyberdream").setup({
-                variant = "dark",
+            require("onedark").setup({
+                style = "cool",
                 transparent = true,
             })
-            vim.cmd([[colorscheme cyberdream]])
+            require("onedark").load()
         end,
     }
 }

@@ -32,6 +32,7 @@
   };
 
   virtualisation.docker.enable = true;
+  services.openssh.enable = true;
 
   nixpkgs.config.allowUnfreePredicate =
     pkg:
@@ -62,6 +63,9 @@
     ];
     shell = pkgs.fish;
     hashedPassword = "$y$j9T$QRezdLXPE44Zrgr39Sk.a/$GoopaJdSpCPXdF0sl1X7Qim3QAoDbdWOQXSOkyuzNIC";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBRs42T+W9UElw7eC4o5zYW0cvm3GLNwdOWdrjGFo0AW ro@nixos"
+    ];
   };
 
   security.pki.certificateFiles = [
