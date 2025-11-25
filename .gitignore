@@ -11,3 +11,4 @@
 .config/git/
 fish_variables
 chromium
+gh/hosts.yml

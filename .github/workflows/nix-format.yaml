@@ -1,0 +1,28 @@
+name: Nix Format
+
+on:
+  push:
+    paths:
+      - 'flake.nix'
+      - 'flake.lock'
+      - 'nix/**'
+      - 'treefmt.toml'
+      - '.github/workflows/nix-format.yaml'
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-nix
+
+      - name: Check formatting and linting
+        run: |
+          nix run .#fmt -- --fail-on-change

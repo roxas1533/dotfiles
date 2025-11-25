@@ -4,6 +4,9 @@ if status is-interactive
     # set fish_prompt_pwd_dir_length 0
     set -x LD_LIBRARY_PATH /usr/lib/wsl/lib
 end
+
+# Add user functions to function path
+set -gp fish_function_path $__fish_config_dir/user_functions $fish_function_path
 alias vim="nvim"
 set -x EDITOR nvim
 alias se="export EDITOR=$EDITOR; sudoedit"
@@ -34,3 +37,10 @@ end
 set -x LANG ja_JP.UTF-8
 set -x DISPLAY :0
 set -x DENO_TLS_CA_STORE system
+
+# Load all config files - overrides NixOS default settings
+for file in $__fish_config_dir/config/*.fish
+    source $file &
+end
+
+source $__fish_config_dir/themes/hydro-config.fish

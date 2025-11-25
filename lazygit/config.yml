@@ -1,0 +1,7 @@
+gui:
+  nerdFontsVersion: "3"
+  tabSize: 4
+git:
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never

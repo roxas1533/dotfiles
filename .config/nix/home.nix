@@ -22,6 +22,9 @@
 
     # unar
 
+    # file utilities
+    eza
+
     # lsp
     lua-language-server
     typescript-language-server
@@ -34,7 +37,7 @@
 
     # fishPlugins
     fishPlugins.z
-    fishPlugins.tide
+    fishPlugins.hydro
 
     # gh extensions
     gh-copilot

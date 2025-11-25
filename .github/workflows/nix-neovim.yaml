@@ -1,0 +1,28 @@
+name: Nix Neovim
+
+on:
+  push:
+    paths:
+      - 'nvim/**'
+      - 'flake.nix'
+      - '.github/workflows/nix-neovim.yaml'
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  neovim-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-nix
+
+      - name: Check Neovim configuration
+        run: nix run .#nvim-restore
+        env:
+          DOTFILES_DIR: ${{ github.workspace }}
