@@ -12,7 +12,6 @@
     # Version Control & Git Tools
     lazygit
     gh
-    gh-copilot
     delta
 
     # Search & File Utilities
