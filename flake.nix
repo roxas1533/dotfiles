@@ -96,7 +96,7 @@
       apps.${system} =
         let
           pkgs = mkPkgs system;
-          treefmtEval = treefmt-nix.lib.evalModule pkgs {
+          treefmtWrapper = treefmt-nix.lib.mkWrapper pkgs {
             projectRootFile = "flake.nix";
             programs = {
               nixfmt = {
@@ -112,7 +112,6 @@
               ];
             };
           };
-          treefmtWrapper = treefmtEval.config.build.wrapper;
         in
         {
           # Format and lint code
