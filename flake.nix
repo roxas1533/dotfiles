@@ -34,14 +34,17 @@
       overlays = import ./nix/overlays { inherit inputs; };
 
       # Helper function to create pkgs with overlays
-      mkPkgs = system: import nixpkgs {
-        inherit system;
-        config.allowUnfreePredicate = pkg:
-          builtins.elem (nixpkgs.lib.getName pkg) [
-            "claude-code"
-          ];
-        overlays = overlays;
-      };
+      mkPkgs =
+        system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfreePredicate =
+            pkg:
+            builtins.elem (nixpkgs.lib.getName pkg) [
+              "claude-code"
+            ];
+          overlays = overlays;
+        };
 
       # Import helper functions
       helpers = import ./nix/modules/lib/helpers/activation.nix { lib = nixpkgs.lib; };
@@ -75,11 +78,13 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.ro = { pkgs, ... }: {
-              imports = homeModules pkgs ++ [
-                ./nix/modules/wsl
-              ];
-            };
+            home-manager.users.ro =
+              { pkgs, ... }:
+              {
+                imports = homeModules pkgs ++ [
+                  ./nix/modules/wsl
+                ];
+              };
           }
         ];
       };
@@ -96,7 +101,7 @@
       apps.${system} =
         let
           pkgs = mkPkgs system;
-          treefmtEval = treefmt-nix.lib.evalModule pkgs {
+          treefmtWrapper = treefmt-nix.lib.mkWrapper pkgs {
             projectRootFile = "flake.nix";
             programs = {
               nixfmt = {
@@ -112,13 +117,16 @@
               ];
             };
           };
-          treefmtWrapper = treefmtEval.config.build.wrapper;
         in
         {
           # Format and lint code
           fmt = {
             type = "app";
-            program = toString treefmtWrapper;
+            program = toString (
+              pkgs.writeShellScript "treefmt-wrapper" ''
+                exec ${treefmtWrapper}/bin/treefmt "$@"
+              ''
+            );
           };
 
           # Restore Neovim plugins (placeholder for now)

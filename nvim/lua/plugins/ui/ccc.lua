@@ -15,11 +15,10 @@ return {
                     default_color = "#db7093",
                     enable = true,
                     disable = function(bufnr)
-                        return not vim.bo[bufnr].buftype == "" or
-                            not vim.bo[bufnr].modifiable
-                    end
+                        return not vim.bo[bufnr].buftype == "" or not vim.bo[bufnr].modifiable
+                    end,
                 }),
             },
-        });
+        })
     end,
 }

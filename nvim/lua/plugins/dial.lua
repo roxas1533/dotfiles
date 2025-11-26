@@ -1,12 +1,12 @@
 return {
     "monaqa/dial.nvim",
     keys = {
-        { "<C-a>",  mode = "n" },
-        { "<C-x>",  mode = "n" },
+        { "<C-a>", mode = "n" },
+        { "<C-x>", mode = "n" },
         { "g<C-a>", mode = "n" },
         { "g<C-x>", mode = "n" },
-        { "<C-a>",  mode = "v" },
-        { "<C-x>",  mode = "v" },
+        { "<C-a>", mode = "v" },
+        { "<C-x>", mode = "v" },
         { "g<C-a>", mode = "v" },
         { "g<C-x>", mode = "v" },
     },
@@ -18,12 +18,11 @@ return {
                 augend.integer.alias.hex,
                 augend.date.alias["%Y/%m/%d"],
                 augend.constant.alias.bool,
-                augend.constant.new {
+                augend.constant.new({
                     elements = { "True", "False" },
                     word = true,
                     cyclic = true,
-                }
-
+                }),
             },
         })
         vim.keymap.set("n", "<C-a>", function()

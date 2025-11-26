@@ -18,13 +18,13 @@ return {
         config = function()
             require("claude-code").setup({
                 keymaps = {
-                    toggle ={
+                    toggle = {
                         normal = "<leader>ae",
                         terminal = "<leader>ae",
-                    }
+                    },
                 },
             })
-        end
+        end,
     },
     {
         "zbirenbaum/copilot.lua",
@@ -42,7 +42,7 @@ return {
                     },
                 },
             })
-        end
+        end,
     },
     {
         "MeanderingProgrammer/render-markdown.nvim",

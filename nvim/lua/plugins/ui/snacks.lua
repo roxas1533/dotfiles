@@ -19,8 +19,8 @@ return {
                     files = { hidden = false },
                     recent = {
                         filter = {
-                            cwd = true
-                        }
+                            cwd = true,
+                        },
                     },
                 },
             },
@@ -29,8 +29,20 @@ return {
             },
         },
         keys = {
-            { "<C-p>",   function() require("snacks.picker").smart() end, desc = "Find file" },
-            { "<C-S-f>", function() require("snacks.picker").grep() end,  desc = "Live grep" }
-        }
-    }
+            {
+                "<C-p>",
+                function()
+                    require("snacks.picker").smart()
+                end,
+                desc = "Find file",
+            },
+            {
+                "<C-S-f>",
+                function()
+                    require("snacks.picker").grep()
+                end,
+                desc = "Live grep",
+            },
+        },
+    },
 }

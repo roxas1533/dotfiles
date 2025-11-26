@@ -1,3 +1,3 @@
 return {
-    "rhysd/clever-f.vim"
+    "rhysd/clever-f.vim",
 }

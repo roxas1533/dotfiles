@@ -112,9 +112,10 @@ return {
             end
             vim.lsp.config("*", default_setup)
 
-            vim.lsp.handlers["textDocument/publishDiagnostics"] =
-                vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
-                    { virtual_text = true, underline = true, signs = true, update_in_insert = true })
+            vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+                vim.lsp.diagnostic.on_publish_diagnostics,
+                { virtual_text = true, underline = true, signs = true, update_in_insert = true }
+            )
             local cmp = require("cmp")
             cmp.setup.cmdline(":", {
                 mapping = cmp.mapping.preset.cmdline(),
@@ -175,8 +176,8 @@ return {
                     },
                 },
                 float = {
-                    border = "rounded"
-                }
+                    border = "rounded",
+                },
             })
         end,
     },
@@ -228,7 +229,7 @@ return {
         event = "VeryLazy",
         priority = 1000,
         config = function()
-            require('tiny-inline-diagnostic').setup({
+            require("tiny-inline-diagnostic").setup({
                 options = {
                     show_source = true,
                     show_all_diags_on_cursorline = true,
@@ -243,6 +244,6 @@ return {
                 },
             })
             -- vim.diagnostic.config({ virtual_text = false, options = { show_source = true } })
-        end
+        end,
     },
 }

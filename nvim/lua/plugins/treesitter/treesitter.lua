@@ -7,7 +7,7 @@ return {
             configs.setup({
                 sync_install = false,
                 highlight = {
-                    enable  = true,
+                    enable = true,
                     -- disable = function(_, buf)
                     --     local max_filesize = 1024 * 1024
                     --     local max_lines = 300

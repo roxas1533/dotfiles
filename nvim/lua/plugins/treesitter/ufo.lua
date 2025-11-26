@@ -7,10 +7,10 @@ return {
     {
         "kevinhwang91/nvim-ufo",
         event = { "BufReadPre" },
-        config = true
+        config = true,
     },
     {
         "kevinhwang91/promise-async",
         lazy = true,
-    }
+    },
 }

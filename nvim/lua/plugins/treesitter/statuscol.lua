@@ -8,19 +8,19 @@ return {
             segments = {
                 { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
                 {
-                    sign = {  maxwidth = 1, namespace = { "diagnostic.signs" } },
+                    sign = { maxwidth = 1, namespace = { "diagnostic.signs" } },
                     click = "v:lua.ScSa",
                 },
                 {
                     sign = {
-                        namespace = { 'gitsigns' },
+                        namespace = { "gitsigns" },
                         maxwidth = 1,
                         colwidth = 1,
                         wrap = true,
                     },
                 },
                 { text = { builtin.lnumfunc } },
-            }
+            },
         })
     end,
 }
