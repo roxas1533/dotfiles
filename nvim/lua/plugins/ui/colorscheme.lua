@@ -37,5 +37,5 @@ return {
             })
             require("onedark").load()
         end,
-    }
+    },
 }

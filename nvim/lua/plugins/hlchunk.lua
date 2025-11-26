@@ -7,8 +7,8 @@ return {
                 enable = true,
                 priority = 1000,
                 style = {
-                    { fg = "#ffffff", },
-                    { fg = "#c21f30", },
+                    { fg = "#ffffff" },
+                    { fg = "#c21f30" },
                 },
                 use_treesitter = true,
                 -- chars = {

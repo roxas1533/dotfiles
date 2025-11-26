@@ -1,10 +1,10 @@
 return {
     {
-        'isakbm/gitgraph.nvim',
+        "isakbm/gitgraph.nvim",
         opts = {
             format = {
-                timestamp = '%Y-%d-%m %H:%M:%S',
-                fields = { 'hash', 'timestamp', 'author', 'branch_name', 'tag' },
+                timestamp = "%Y-%d-%m %H:%M:%S",
+                fields = { "hash", "timestamp", "author", "branch_name", "tag" },
             },
             hooks = {
                 on_select_commit = function(commit)
@@ -49,17 +49,17 @@ return {
             {
                 "<leader>gl",
                 function()
-                    require('gitgraph').draw({}, { all = true, max_count = 5000 })
+                    require("gitgraph").draw({}, { all = true, max_count = 5000 })
                 end,
                 desc = "GitGraph - Draw",
             },
         },
         config = function(_, opts)
-            require('gitgraph').setup(opts)
-            vim.cmd [[highlight GitGraphBranchName guifg=#51afef guibg=#1e2132]]
-            vim.cmd [[highlight GitGraphBranchTag guifg=#121212 guibg=#51afef]]
-            vim.cmd [[highlight GitGraphCommit guifg=#51afef]]
-            vim.cmd [[highlight GitGraphMergeCommit guifg=#51afef]]
+            require("gitgraph").setup(opts)
+            vim.cmd([[highlight GitGraphBranchName guifg=#51afef guibg=#1e2132]])
+            vim.cmd([[highlight GitGraphBranchTag guifg=#121212 guibg=#51afef]])
+            vim.cmd([[highlight GitGraphCommit guifg=#51afef]])
+            vim.cmd([[highlight GitGraphMergeCommit guifg=#51afef]])
         end,
     },
 }
