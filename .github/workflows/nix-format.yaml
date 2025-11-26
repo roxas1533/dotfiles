@@ -6,6 +6,7 @@ on:
       - 'flake.nix'
       - 'flake.lock'
       - 'nix/**'
+      - 'configuration.nix'
       - 'treefmt.toml'
       - '.github/workflows/nix-format.yaml'
   pull_request:

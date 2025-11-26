@@ -45,11 +45,15 @@ sudo nixos-rebuild switch --flake .
 
 ## File Organization
 
-- `.config/nix/` - All Nix configurations
-- `.config/nvim/` - Neovim configuration with plugin management
-- `.config/fish/` - Fish shell configuration and functions
-- `Code/` - VS Code settings and extensions
+- `nix/` - Nix module configurations (packages, dotfiles, platform-specific)
+- `configuration.nix` - NixOS system-level configuration
+- `flake.nix` - Main flake configuration with inputs and outputs
+- `fish/` - Fish shell configuration and functions
+- `nvim/` - Neovim configuration with plugin management
+- `git/`, `lazygit/`, `gh/` - Version control tool configurations
 - `.bin/` - Custom utility scripts
+
+Configuration files are symlinked to `~/.config/` by Nix home-manager activation scripts.
 
 ## WSL Integration
 
