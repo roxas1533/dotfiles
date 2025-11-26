@@ -10,7 +10,7 @@ on:
       - 'flake.nix'
       - 'flake.lock'
       - 'nix/**'
-      - '.config/nix/**'
+      - 'configuration.nix'
       - '.github/workflows/nix-build.yaml'
   workflow_dispatch:
 
