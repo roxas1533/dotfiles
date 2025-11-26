@@ -12,6 +12,10 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    mcp-server-mysql = {
+      url = "github:benborla/mcp-server-mysql";
+      flake = false;
+    };
   };
 
   outputs =
@@ -27,7 +31,7 @@
       system = "x86_64-linux";
 
       # Import overlays
-      overlays = import ./nix/overlays;
+      overlays = import ./nix/overlays { inherit inputs; };
 
       # Helper function to create pkgs with overlays
       mkPkgs = system: import nixpkgs {
