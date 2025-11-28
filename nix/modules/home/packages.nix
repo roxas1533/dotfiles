@@ -18,6 +18,7 @@
     ripgrep
     eza
     yazi
+    python313Packages.markitdown
 
     # Languages & Runtimes
     lua
