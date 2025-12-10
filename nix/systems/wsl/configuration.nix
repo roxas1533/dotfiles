@@ -18,6 +18,9 @@
 
   # Nix settings
   nix.settings = {
-    trusted-users = [ "root" "ro" ];
+    trusted-users = [
+      "root"
+      "ro"
+    ];
   };
 }

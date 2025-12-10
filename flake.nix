@@ -77,20 +77,10 @@
           };
           modules = [
             # Import nixos-wsl module only when in WSL
-            (
-              if isWSL then
-                nixos-wsl.nixosModules.default
-              else
-                { }
-            )
+            (if isWSL then nixos-wsl.nixosModules.default else { })
             ./nix/systems/common
             # Import platform-specific configuration
-            (
-              if isWSL then
-                ./nix/systems/wsl/configuration.nix
-              else
-                ./nix/systems/native/configuration.nix
-            )
+            (if isWSL then ./nix/systems/wsl/configuration.nix else ./nix/systems/native/configuration.nix)
             {
               system.stateVersion = "25.05";
               nixpkgs.overlays = overlays;
@@ -103,14 +93,7 @@
               home-manager.users.ro =
                 { pkgs, ... }:
                 {
-                  imports =
-                    homeModules pkgs
-                    ++ (
-                      if isWSL then
-                        [ ./nix/modules/wsl ]
-                      else
-                        [ ./nix/modules/native ]
-                    );
+                  imports = homeModules pkgs ++ (if isWSL then [ ./nix/modules/wsl ] else [ ./nix/modules/native ]);
                 };
             }
           ];
