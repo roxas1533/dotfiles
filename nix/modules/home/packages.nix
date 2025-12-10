@@ -47,6 +47,7 @@
 
     # MCP Servers
     mcp-server-mysql
+    mcp-language-server
     github-mcp-server
   ];
 }

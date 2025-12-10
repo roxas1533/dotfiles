@@ -23,6 +23,32 @@ Personal dotfiles managed with Nix for WSL2 and Linux environments.
    exec fish
    ```
 
+### NixOS (Native)
+
+1. Clone this repository:
+   ```sh
+   git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
+   cd ~/dotfiles
+   ```
+
+2. Generate and copy hardware configuration:
+   ```sh
+   sudo nixos-generate-config
+   cp /etc/nixos/hardware-configuration.nix \
+      ~/dotfiles/nix/systems/native/hardware-configuration.nix
+   ```
+
+3. Apply configuration:
+   ```sh
+   sudo nixos-rebuild switch --flake .#nixos-native
+   # または: nix run .#switch-native
+   ```
+
+4. Reload shell:
+   ```sh
+   exec fish
+   ```
+
 ### Linux (Home Manager)
 
 1. Install Nix:
@@ -42,8 +68,8 @@ Personal dotfiles managed with Nix for WSL2 and Linux environments.
 Apply changes after editing configuration:
 
 ```sh
-# NixOS (WSL2)
-sudo nixos-rebuild switch --flake .
+# NixOS
+nrc
 
 # Linux (Home Manager)
 home-manager switch --flake .#ro

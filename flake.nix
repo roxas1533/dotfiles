@@ -16,6 +16,10 @@
       url = "github:benborla/mcp-server-mysql";
       flake = false;
     };
+    mcp-language-server = {
+      url = "github:isaacphi/mcp-language-server";
+      flake = false;
+    };
   };
 
   outputs =
@@ -59,34 +63,58 @@
           };
         }
       ];
+
+      # Helper to build a NixOS configuration; WSL/native をユーザーが明示指定する
+      mkNixosConfig =
+        {
+          name,
+          isWSL,
+        }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit inputs isWSL;
+          };
+          modules = [
+            # Import nixos-wsl module only when in WSL
+            (if isWSL then nixos-wsl.nixosModules.default else { })
+            ./nix/systems/common
+            # Import platform-specific configuration
+            (if isWSL then ./nix/systems/wsl/configuration.nix else ./nix/systems/native/configuration.nix)
+            {
+              system.stateVersion = "25.05";
+              nixpkgs.overlays = overlays;
+            }
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.ro =
+                { pkgs, ... }:
+                {
+                  imports = homeModules pkgs ++ (if isWSL then [ ./nix/modules/wsl ] else [ ./nix/modules/native ]);
+                };
+            }
+          ];
+        };
     in
     {
-      # NixOS configuration for WSL2
-      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = { inherit inputs; };
-        modules = [
-          nixos-wsl.nixosModules.default
-          ./configuration.nix
-          {
-            system.stateVersion = "25.05";
-            wsl.enable = true;
-            nixpkgs.overlays = overlays;
-          }
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.ro =
-              { pkgs, ... }:
-              {
-                imports = homeModules pkgs ++ [
-                  ./nix/modules/wsl
-                ];
-              };
-          }
-        ];
+      # NixOS configurations: 明示的に WSL / Native を選択する
+      # 互換のため `.#nixos` は WSL 用として扱う
+      nixosConfigurations = {
+        nixos = mkNixosConfig {
+          name = "nixos";
+          isWSL = true;
+        };
+        nixos-wsl = mkNixosConfig {
+          name = "nixos-wsl";
+          isWSL = true;
+        };
+        nixos-native = mkNixosConfig {
+          name = "nixos-native";
+          isWSL = false;
+        };
       };
 
       # Standalone home-manager configuration for non-NixOS Linux
@@ -119,6 +147,24 @@
           };
         in
         {
+          # NixOS switch helpers
+          switch = {
+            type = "app";
+            program = toString (
+              pkgs.writeShellScript "switch-wsl" ''
+                exec sudo nixos-rebuild switch --flake ${self}#nixos-wsl "$@"
+              ''
+            );
+          };
+          switch-native = {
+            type = "app";
+            program = toString (
+              pkgs.writeShellScript "switch-native" ''
+                exec sudo nixos-rebuild switch --flake ${self}#nixos-native "$@"
+              ''
+            );
+          };
+
           # Format and lint code
           fmt = {
             type = "app";
