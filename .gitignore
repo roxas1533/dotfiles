@@ -1,4 +1,5 @@
 # Nix build results
+result/*
 result
 result-*
 
@@ -13,3 +14,4 @@ btop/btop.log
 
 # Other
 chromium
+.mcp.json

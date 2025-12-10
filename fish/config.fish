@@ -38,6 +38,16 @@ set -x LANG ja_JP.UTF-8
 set -x DISPLAY :0
 set -x DENO_TLS_CA_STORE system
 
+# NixOS rebuild helper: auto-select WSL/native target
+function nrs --description "nixos-rebuild switch with WSL/native auto-detect"
+    set -l flake "/home/ro/dotfiles"
+    if test (systemd-detect-virt) = "wsl"
+        nix run $flake#switch -- $argv
+    else
+        nix run $flake#switch-native -- $argv
+    end
+end
+
 # Load all config files - overrides NixOS default settings
 for file in $__fish_config_dir/config/*.fish
     source $file &

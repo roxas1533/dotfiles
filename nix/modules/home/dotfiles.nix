@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   config,
   dotfilesDir ? "${config.home.homeDirectory}/dotfiles",
@@ -7,7 +6,6 @@
   ...
 }:
 let
-  homeDir = config.home.homeDirectory;
   configHome = config.xdg.configHome;
 in
 {
