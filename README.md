@@ -14,8 +14,7 @@ Personal dotfiles managed with Nix for WSL2 and Linux environments.
 
 2. Apply configuration:
    ```sh
-   nix flake update
-   sudo nixos-rebuild switch --flake .
+   nix --extra-experimental-features "nix-command flakes" run .#switch
    ```
 
 3. Reload shell:
@@ -40,13 +39,12 @@ Personal dotfiles managed with Nix for WSL2 and Linux environments.
 
 3. Apply configuration:
    ```sh
-   sudo nixos-rebuild switch --flake .#nixos-native
-   # または: nix run .#switch-native
+   nix --extra-experimental-features "nix-command flakes" run .#switch-native
    ```
 
-4. Reload shell:
+4. Reboot to apply boot loader and display manager changes:
    ```sh
-   exec fish
+   sudo reboot
    ```
 
 ### Linux (Home Manager)

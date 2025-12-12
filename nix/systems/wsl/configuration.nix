@@ -8,6 +8,10 @@
   wsl = {
     enable = true;
     defaultUser = "ro";
+
+    # Enable Windows interop (required for running .exe files)
+    interop.register = true;
+
     wslConf.boot.command = ''
       ln -s /mnt/wslg/runtime-dir/wayland-0* "$XDG_RUNTIME_DIR"
     '';
