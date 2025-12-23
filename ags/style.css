@@ -1,0 +1,15 @@
+/* Custom HyprPanel styles */
+
+/* メニュー背景を透明に（テキストは不透明のまま） */
+.menu,
+.dropdown-menu,
+.dashboard,
+.calendar-menu,
+.notifications-menu {
+  background-color: rgba(17, 17, 27, 0.55); /* 55% opacity background */
+}
+
+/* ポップアップ背景 */
+.popover {
+  background-color: rgba(24, 24, 36, 0.55);
+}

@@ -17,10 +17,15 @@ in
   # Bootloader configuration
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.consoleMode = "max";
+  console.keyMap = "jp106";
 
   # Networking
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
+  virtualisation.hypervGuest.enable = true;
+  boot.initrd.kernelModules = [ "hyperv_drm" ];
+  # 動的解像度のためカーネルパラメータは指定しない
 
   # Enable sound with pipewire
   services.pulseaudio.enable = false;
@@ -30,6 +35,12 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+  };
+
+  # xdg-desktop-portal for screen sharing
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
   };
 
   # Enable Hyprland
@@ -51,6 +62,7 @@ in
 
   # Enable polkit for privilege escalation
   security.polkit.enable = true;
+  nixpkgs.config.allowUnfree = true;
 
   # Native-specific packages
   environment.systemPackages = with pkgs; [
@@ -60,8 +72,7 @@ in
 
     # Hyprland ecosystem
     waybar # Status bar
-    wofi # Application launcher
-    mako # Notification daemon
+    walker # Application launcher
     swaylock # Screen locker
     swayidle # Idle management daemon
     grim # Screenshot tool
@@ -89,6 +100,7 @@ in
     fcitx5.addons = with pkgs; [
       fcitx5-mozc
       fcitx5-gtk
+      fcitx5-fluent # Fluentダークテーマ（blur効果付き）
     ];
   };
 

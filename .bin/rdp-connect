@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# RDP connection script with dual monitor support using wlfreerdp
+
+HOST="localhost"
+USER="ro"
+
+wlfreerdp \
+  /v:"$HOST" \
+  /u:"$USER" \
+  /multimon \
+  /dynamic-resolution \
+  /gfx:avc444 \
+  /network:lan \
+  /sound \
+  /microphone \
+  /clipboard \
+  "$@"
