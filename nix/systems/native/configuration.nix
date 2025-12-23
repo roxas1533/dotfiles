@@ -49,10 +49,14 @@ in
     xwayland.enable = true;
   };
 
-  # Display manager for login
+  # Display manager for login (auto-login to ro)
   services.greetd = {
     enable = true;
     settings = {
+      initial_session = {
+        command = "Hyprland";
+        user = "ro";
+      };
       default_session = {
         command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd Hyprland";
         user = "greeter";
