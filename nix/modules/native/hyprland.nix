@@ -18,6 +18,9 @@
         "XCURSOR_SIZE,24"
         "HYPRCURSOR_SIZE,24"
         "ADW_DEBUG_COLOR_SCHEME,prefer-dark"
+        # Qt6 dark mode (for fcitx5-configtool etc.)
+        "QT_QPA_PLATFORMTHEME,adwaita"
+        "QT_STYLE_OVERRIDE,adwaita-dark"
       ];
 
       # Programs
