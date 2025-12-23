@@ -45,7 +45,7 @@
 
   # Additional packages for NVIDIA
   environment.systemPackages = with pkgs; [
-    nvtopPackages.nvidia  # GPU monitoring
-    libva-utils           # VA-API utilities
+    nvtopPackages.nvidia # GPU monitoring
+    libva-utils # VA-API utilities
   ];
 }
