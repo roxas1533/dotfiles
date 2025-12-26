@@ -12,6 +12,21 @@ gh/hosts.yml
 # Log files
 btop/btop.log
 
+# Config directories
+.config/github-copilot/
+.config/wslu/
+.config/fish/functions/
+.config/.wrangler/
+.config/direnv/
+.config/environment.d
+.config/gh/
+.config/fontconfig/
+.config/configstore/
+.config/fish/fishd.tmp.*
+.config/git/
+.config/systemd/user/*
+fish_variables
+
 # Other
 chromium
 .mcp.json
