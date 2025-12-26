@@ -25,6 +25,12 @@
   programs.nix-ld.enable = true;
 
   # User configuration
+  # NixOSにユーザー管理を完全委譲（passwdコマンドでの変更は不可）
+  users.mutableUsers = false;
+
+  # wheelグループはパスワードなしでsudo可能
+  security.sudo.wheelNeedsPassword = false;
+
   users.users.ro = {
     isNormalUser = true;
     home = "/home/ro";

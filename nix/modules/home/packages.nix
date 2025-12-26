@@ -18,6 +18,7 @@
     ripgrep
     eza
     yazi
+    jq
     python313Packages.markitdown
 
     # Languages & Runtimes
