@@ -59,6 +59,10 @@ in
     # GitHub CLI configuration
     link_force "${dotfilesDir}/gh" "${configHome}/gh"
 
+    # Claude Code configuration
+    mkdir -p "${config.home.homeDirectory}/.claude"
+    link_force "${dotfilesDir}/claude/settings.json" "${config.home.homeDirectory}/.claude/settings.json"
+
     echo ""
     echo "✓ Dotfiles のシンボリックリンクを作成しました"
     echo ""
