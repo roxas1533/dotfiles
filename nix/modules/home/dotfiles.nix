@@ -59,6 +59,10 @@ in
     # GitHub CLI configuration
     link_force "${dotfilesDir}/gh" "${configHome}/gh"
 
+    # Claude Code configuration
+    mkdir -p "${config.home.homeDirectory}/.claude"
+    link_force "${dotfilesDir}/claude/settings.json" "${config.home.homeDirectory}/.claude/settings.json"
+
     # AGS/HyprPanel configuration
     link_force "${dotfilesDir}/ags" "${configHome}/ags"
 

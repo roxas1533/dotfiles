@@ -12,7 +12,7 @@ let
   hardwareConfigExists = builtins.pathExists hardwareConfigPath;
 in
 {
-  imports = lib.optionals hardwareConfigExists [ hardwareConfigPath ];
+  imports = [ ./disko.nix ] ++ lib.optionals hardwareConfigExists [ hardwareConfigPath ];
 
   # Bootloader configuration
   boot.loader.systemd-boot.enable = true;
@@ -23,9 +23,6 @@ in
   # Networking
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
-  virtualisation.hypervGuest.enable = true;
-  boot.initrd.kernelModules = [ "hyperv_drm" ];
-  # 動的解像度のためカーネルパラメータは指定しない
 
   # Enable sound with pipewire
   services.pulseaudio.enable = false;

@@ -20,6 +20,10 @@
       url = "github:isaacphi/mcp-language-server";
       flake = false;
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -29,6 +33,7 @@
       nixos-wsl,
       home-manager,
       treefmt-nix,
+      disko,
       ...
     }@inputs:
     let
@@ -78,6 +83,8 @@
           modules = [
             # Import nixos-wsl module only when in WSL
             (if isWSL then nixos-wsl.nixosModules.default else { })
+            # Import disko module only for native (physical machine)
+            (if isWSL then { } else disko.nixosModules.disko)
             ./nix/systems/common
             # Import platform-specific configuration
             (if isWSL then ./nix/systems/wsl/configuration.nix else ./nix/systems/native/configuration.nix)
@@ -161,6 +168,68 @@
             program = toString (
               pkgs.writeShellScript "switch-native" ''
                 exec sudo nixos-rebuild switch --flake ${self}#nixos-native "$@"
+              ''
+            );
+          };
+
+          # Install NixOS from ISO boot (local installation)
+          # Usage: Boot NixOS ISO, then run: nix run github:roxas1533/dotfiles#install-native
+          install-native = {
+            type = "app";
+            program = toString (
+              pkgs.writeShellScript "install-native" ''
+                set -euo pipefail
+
+                echo "=== NixOS Native Installation ==="
+                echo ""
+
+                # Check if running as root
+                if [ "$EUID" -ne 0 ]; then
+                  echo "Error: Please run as root (sudo)"
+                  exit 1
+                fi
+
+                # Show available disks
+                echo "Available disks:"
+                lsblk -d -o NAME,SIZE,MODEL
+                echo ""
+
+                # Default disk from disko.nix is /dev/sda
+                read -p "Target disk [/dev/sda]: " DISK
+                DISK=''${DISK:-/dev/sda}
+
+                if [ ! -b "$DISK" ]; then
+                  echo "Error: $DISK is not a valid block device"
+                  exit 1
+                fi
+
+                echo ""
+                echo "WARNING: This will ERASE ALL DATA on $DISK"
+                read -p "Are you sure? (yes/no): " CONFIRM
+                if [ "$CONFIRM" != "yes" ]; then
+                  echo "Aborted."
+                  exit 1
+                fi
+
+                echo ""
+                echo "Step 1/3: Partitioning $DISK with disko..."
+                nix run github:nix-community/disko -- \
+                  --mode disko \
+                  --arg device "\"$DISK\"" \
+                  ${self}/nix/systems/native/disko.nix
+
+                echo ""
+                echo "Step 2/3: Installing NixOS..."
+                nixos-install --flake ${self}#nixos-native --no-root-passwd
+
+                echo ""
+                echo "Step 3/3: Installation complete!"
+                echo "You can now reboot into your new NixOS system."
+                echo ""
+                read -p "Reboot now? (yes/no): " REBOOT
+                if [ "$REBOOT" = "yes" ]; then
+                  reboot
+                fi
               ''
             );
           };
