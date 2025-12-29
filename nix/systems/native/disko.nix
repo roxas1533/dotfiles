@@ -8,7 +8,11 @@
 #   sudo nix run github:nix-community/disko -- --mode disko \
 #     --arg device '"/dev/nvme0n1"' ./disko.nix
 
-{ lib, device ? "/dev/sda", ... }:
+{
+  lib,
+  device ? "/dev/sda",
+  ...
+}:
 
 {
   disko.devices = {
