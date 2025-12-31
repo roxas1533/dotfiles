@@ -1,5 +1,18 @@
 { pkgs, ... }:
+let
+  wallpaper = pkgs.fetchurl {
+    url = "https://r2.ro15.dev/wallpaper/atri_sora.jpg";
+    sha256 = "sha256-NbaeV7SN12JaIXM0y2lCUNA6j5U30rA8mWI0w8Gt5J0=";
+  };
+in
 {
+  # Hyprpaper wallpaper configuration
+  xdg.configFile."hypr/hyprpaper.conf".text = ''
+    preload = ${wallpaper}
+    wallpaper = ,${wallpaper}
+    splash = false
+  '';
+
   wayland.windowManager.hyprland = {
     enable = true;
 
@@ -31,6 +44,7 @@
 
       # Autostart
       exec-once = [
+        "hyprpaper"
         "hyprpanel"
         "fcitx5"
       ];

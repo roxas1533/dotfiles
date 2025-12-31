@@ -16,6 +16,7 @@
   home.packages = with pkgs; [
     # Add native-specific user packages if needed
     hyprpanel
+    hyprpaper # Wallpaper daemon
     discord
     vivaldi
     wezterm
