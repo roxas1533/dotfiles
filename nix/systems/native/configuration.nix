@@ -24,6 +24,9 @@ in
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
+  # Use local time for hardware clock (for Windows dual-boot compatibility)
+  time.hardwareClockInLocalTime = true;
+
   # Enable sound with pipewire
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
