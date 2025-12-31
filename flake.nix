@@ -180,6 +180,9 @@
               pkgs.writeShellScript "install-native" ''
                 set -euo pipefail
 
+                # Enable flakes for all nix commands in this script
+                export NIX_CONFIG="experimental-features = nix-command flakes"
+
                 echo "=== NixOS Native Installation ==="
                 echo ""
 
