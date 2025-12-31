@@ -65,6 +65,9 @@ in
   security.polkit.enable = true;
   nixpkgs.config.allowUnfree = true;
 
+  # Noise canceling (RNNoise-based)
+  programs.noisetorch.enable = true;
+
   # Native-specific packages
   environment.systemPackages = with pkgs; [
     # Wayland core
