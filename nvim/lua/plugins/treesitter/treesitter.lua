@@ -1,42 +1,36 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
-        lazy = true,
+        branch = "main",
+        lazy = false,
+        build = ":TSUpdate",
         config = function()
-            local configs = require("nvim-treesitter.configs")
-            configs.setup({
-                sync_install = false,
-                highlight = {
-                    enable = true,
-                    -- disable = function(_, buf)
-                    --     local max_filesize = 1024 * 1024
-                    --     local max_lines = 300
-                    --
-                    --     local ok, status = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                    --     if ok and status ~= nil then
-                    --         if status.size < max_filesize then
-                    --             return true
-                    --         end
-                    --     end
-                    --     return false
-                    -- end,
-                },
-                ensure_installed = {
-                    "bash",
-                    "c",
-                    "cpp",
-                    "css",
-                    "html",
-                    "javascript",
-                    "json",
-                    "lua",
-                    "markdown",
-                    "markdown_inline",
-                    "python",
-                    "rust",
-                    "typescript",
-                },
-                indent = { enable = true },
+            require("nvim-treesitter").setup({})
+
+            local parsers = {
+                "bash",
+                "c",
+                "cpp",
+                "css",
+                "html",
+                "javascript",
+                "json",
+                "lua",
+                "markdown",
+                "markdown_inline",
+                "python",
+                "rust",
+                "typescript",
+            }
+
+            -- Install parsers asynchronously
+            require("nvim-treesitter").install(parsers)
+
+            -- Enable treesitter highlighting and indentation
+            vim.api.nvim_create_autocmd("FileType", {
+                callback = function(args)
+                    pcall(vim.treesitter.start, args.buf)
+                end,
             })
         end,
     },
