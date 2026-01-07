@@ -6,7 +6,6 @@ config.automatically_reload_config = true
 config.font_size = 11.0
 config.use_ime = true
 config.window_background_opacity = 0.3
-config.window_decorations = "RESIZE"
 config.window_frame = {
     inactive_titlebar_bg = "none",
     active_titlebar_bg = "none",
@@ -38,6 +37,16 @@ config.keys = {
         key = "f",
         mods = "CTRL|SHIFT",
         action = wezterm.action.SendKey({ key = "F", mods = "CTRL|SHIFT" }),
+    },
+    { -- <C-.>
+        key = "Enter",
+        mods = "CTRL|SHIFT",
+        action = wezterm.action.SendKey({ key = "Enter", mods = "CTRL|SHIFT" }),
+    },
+    {
+        key = "/",
+        mods = "CTRL",
+        action = wezterm.action.SendString("\x1f"),
     },
     { key = "UpArrow", mods = "NONE", action = wezterm.action.SendString("\x1bOA") },
     { key = "DownArrow", mods = "NONE", action = wezterm.action.SendString("\x1bOB") },

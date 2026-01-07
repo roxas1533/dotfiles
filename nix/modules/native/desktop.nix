@@ -1,12 +1,20 @@
 { pkgs, ... }:
 
 {
+  # Wayland/Hyprland全体のカーソル設定
+  home.pointerCursor = {
+    name = "Adwaita";
+    package = pkgs.adwaita-icon-theme;
+    size = 24;
+    gtk.enable = true;
+    x11.enable = true;
+  };
   # GTK アプリケーション（Waylandネイティブ & XWayland）のダークモード設定
   gtk = {
     enable = true;
 
     theme = {
-      name = "Fluent-Dark";
+      name = "Fluent-round-Dark";
       package = pkgs.fluent-gtk-theme.override {
         themeVariants = [ "default" ];
         colorVariants = [ "dark" ];
@@ -46,7 +54,7 @@
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = "Fluent-Dark";
+      gtk-theme = "Fluent-round-Dark";
       icon-theme = "candy-icons";
     };
     # Nautilus ダークモード
