@@ -23,9 +23,8 @@
     "/"
   ],
   "theme.font.size": "1.1rem",
-  "theme.bar.transparent": false,
-  "theme.bar.opacity": 1,
-  "theme.bar.menus.background": "rgba(17, 17, 27, 0.55)",
+  "theme.bar.transparent": true,
+  "theme.bar.menus.background": "rgba(17, 17, 27, 1)",
   "theme.bar.menus.cards": "rgba(30, 30, 46, 0.55)",
   "theme.bar.menus.popover.background": "#ed333b",
   "theme.bar.menus.menu.notifications.background": "#00000001",
@@ -46,11 +45,14 @@
   "theme.bar.menus.menu.clock.background.color": "#00000001",
   "theme.bar.menus.menu.clock.card.color": "#ff780033",
   "scalingPriority": "hyprland",
-  "theme.bar.border.location": "none",
+  "theme.bar.border.location": "right",
   "bar.launcher.autoDetectIcon": true,
   "theme.osd.enable": true,
   "theme.bar.floating": false,
   "bar.autoHide": "fullscreen",
   "theme.bar.buttons.enableBorders": true,
-  "theme.bar.layer": "bottom"
+  "theme.bar.layer": "top",
+  "theme.bar.buttons.style": "default",
+  "menus.transition": "crossfade",
+  "menus.dashboard.powermenu.confirmation": true
 }
