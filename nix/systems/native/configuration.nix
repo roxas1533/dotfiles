@@ -12,7 +12,11 @@ let
   hardwareConfigExists = builtins.pathExists hardwareConfigPath;
 in
 {
-  imports = lib.optionals hardwareConfigExists [ hardwareConfigPath ];
+  imports = [
+    ./disko.nix
+    ./nvidia.nix
+  ]
+  ++ lib.optionals hardwareConfigExists [ hardwareConfigPath ];
 
   # Bootloader configuration
   boot.loader.systemd-boot.enable = true;
@@ -23,9 +27,9 @@ in
   # Networking
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
-  virtualisation.hypervGuest.enable = true;
-  boot.initrd.kernelModules = [ "hyperv_drm" ];
-  # 動的解像度のためカーネルパラメータは指定しない
+
+  # Use local time for hardware clock (for Windows dual-boot compatibility)
+  time.hardwareClockInLocalTime = true;
 
   # Enable sound with pipewire
   services.pulseaudio.enable = false;
@@ -68,6 +72,9 @@ in
   security.polkit.enable = true;
   nixpkgs.config.allowUnfree = true;
 
+  # Required for EasyEffects
+  programs.dconf.enable = true;
+
   # Native-specific packages
   environment.systemPackages = with pkgs; [
     # Wayland core
@@ -88,6 +95,7 @@ in
     brightnessctl # Backlight control
     playerctl # Media player control
     pavucontrol # PulseAudio volume control
+    deepfilternet # DeepFilterNet noise suppression
   ];
 
   # Additional user groups for native (adds to common)

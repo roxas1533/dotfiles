@@ -23,30 +23,33 @@ Personal dotfiles managed with Nix for WSL2 and Linux environments.
    exec fish
    ```
 
-### NixOS (Native)
+### NixOS (Native) - Fresh Install
+
+Boot from [NixOS ISO](https://nixos.org/download), then run:
+
+```sh
+sudo nix run github:roxas1533/dotfiles#install-native \
+  --experimental-features "nix-command flakes"
+```
+
+This will:
+1. Show available disks and prompt for target device
+2. Partition and format with disko (ESP + root)
+3. Install NixOS with this configuration
+4. Prompt to reboot
+
+### NixOS (Native) - Existing System
 
 1. Clone this repository:
    ```sh
-   git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
+   git clone https://github.com/roxas1533/dotfiles.git ~/dotfiles
    cd ~/dotfiles
    ```
 
-2. Generate and copy hardware configuration:
+2. Apply configuration:
    ```sh
-   sudo nixos-generate-config
-   cp /etc/nixos/hardware-configuration.nix \
-      ~/dotfiles/nix/systems/native/hardware-configuration.nix
-   ```
-
-3. Apply configuration:
-   ```sh
-   sudo nixos-rebuild switch --flake .#nixos-native
+   nrs
    # または: nix run .#switch-native
-   ```
-
-4. Reload shell:
-   ```sh
-   exec fish
    ```
 
 ### Linux (Home Manager)
@@ -68,8 +71,8 @@ Personal dotfiles managed with Nix for WSL2 and Linux environments.
 Apply changes after editing configuration:
 
 ```sh
-# NixOS
-nrc
+# NixOS (WSL/Native auto-detect)
+nrs
 
 # Linux (Home Manager)
 home-manager switch --flake .#ro
@@ -106,3 +109,4 @@ sudo nixos-rebuild switch --rollback
 - [NixOS Manual](https://nixos.org/manual/nixos/stable/)
 - [Home Manager Manual](https://nix-community.github.io/home-manager/)
 - [NixOS-WSL](https://github.com/nix-community/NixOS-WSL)
+- [disko](https://github.com/nix-community/disko) - Declarative disk partitioning

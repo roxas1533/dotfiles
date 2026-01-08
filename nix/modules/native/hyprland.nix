@@ -1,22 +1,43 @@
 { pkgs, ... }:
+let
+  wallpaper = pkgs.fetchurl {
+    url = "https://r2.ro15.dev/wallpaper/atri_sora.jpg";
+    sha256 = "sha256-NbaeV7SN12JaIXM0y2lCUNA6j5U30rA8mWI0w8Gt5J0=";
+  };
+in
 {
+  # Hyprpaper wallpaper configuration
+  xdg.configFile."hypr/hyprpaper.conf".text = ''
+    preload = ${wallpaper}
+    wallpaper = ,${wallpaper}
+    splash = false
+  '';
+
   wayland.windowManager.hyprland = {
     enable = true;
 
     # プラグイン（自動ロード）
-    plugins = with pkgs.hyprlandPlugins; [
-      hyprexpo
-    ];
+    # TODO: hyprexpo disabled due to version mismatch (0.52.0 vs Hyprland 0.52.2)
+    # Re-enable when nixpkgs updates hyprexpo
+    # plugins = with pkgs.hyprlandPlugins; [
+    #   hyprexpo
+    # ];
 
     # Hyprland設定（hyprland.confの内容をNix式に変換）
     settings = {
       # Monitor configuration
-      monitor = ",1920x1080@60,auto,1";
+      # DP-3 (BenQ) on left, HDMI-A-1 (HP) on right (primary)
+      monitor = [
+        "DP-3,1920x1080@60,-1920x0,1"
+        "HDMI-A-1,1920x1080@60,0x0,1"
+      ];
 
       # Environment variables
       env = [
+        "XCURSOR_THEME,Adwaita"
         "XCURSOR_SIZE,24"
         "HYPRCURSOR_SIZE,24"
+        "GTK_THEME,Fluent-round-Dark"
         "ADW_DEBUG_COLOR_SCHEME,prefer-dark"
         # Qt6 dark mode (for fcitx5-configtool etc.)
         "QT_QPA_PLATFORMTHEME,adwaita"
@@ -31,8 +52,10 @@
 
       # Autostart
       exec-once = [
+        "hyprpaper"
         "hyprpanel"
         "fcitx5"
+        "walker --gapplication-service"
       ];
 
       # General settings
@@ -45,6 +68,13 @@
         resize_on_border = false;
         allow_tearing = false;
         layout = "dwindle";
+
+        # Floating window snap settings
+        snap = {
+          enabled = true;
+          window_gap = 10;
+          monitor_gap = 10;
+        };
       };
 
       # Decoration
@@ -66,6 +96,7 @@
           size = 1;
           passes = 2;
           vibrancy = 0.1696;
+          brightness = 0.7;
           popups = true;
           popups_ignorealpha = 0.2;
           input_methods = true;
@@ -150,11 +181,11 @@
         "$mainMod, E, exec, $fileManager"
         "$mainMod, G, togglefloating"
         "$mainMod, R, exec, $menu"
-        "$mainMod, P, pseudo"
+        "$mainMod, P, pin"
         "$mainMod, J, togglesplit"
 
-        # hyprexpo
-        "$mainMod, TAB, hyprexpo:expo, toggle"
+        # hyprexpo (disabled - version mismatch)
+        # "$mainMod, TAB, hyprexpo:expo, toggle"
 
         # Move focus
         "$mainMod, left, movefocus, l"
@@ -188,7 +219,7 @@
 
         # Special workspace
         "$mainMod, S, togglespecialworkspace, magic"
-        "$mainMod SHIFT, S, movetoworkspace, special:magic"
+        "$mainMod SHIFT, W, movetoworkspace, special:magic"
 
         # Scroll workspaces
         "$mainMod, mouse_down, workspace, e+1"
@@ -242,6 +273,8 @@
       # Window rules
       windowrulev2 = [
         "opacity 0.7 0.7, class:^(org.gnome.Nautilus)$"
+        # Pinned window styling (orange border for both active and inactive)
+        "bordercolor rgb(ff9500) rgb(cc7700), pinned:1"
       ];
 
       windowrule = [
@@ -249,17 +282,38 @@
         "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
       ];
 
-      # Plugin settings
-      plugin = {
-        hyprexpo = {
-          columns = 3;
-          gap_size = 5;
-          bg_col = "rgb(111111)";
-          workspace_method = "center current";
-          enable_gesture = true;
-          gesture_fingers = 3;
-          gesture_distance = 300;
-          gesture_positive = true;
+      # Plugin settings (hyprexpo disabled - version mismatch)
+      # plugin = {
+      #   hyprexpo = {
+      #     columns = 3;
+      #     gap_size = 5;
+      #     bg_col = "rgb(111111)";
+      #     workspace_method = "center current";
+      #     enable_gesture = true;
+      #     gesture_fingers = 3;
+      #     gesture_distance = 300;
+      #     gesture_positive = true;
+      #   };
+      # };
+    };
+  };
+
+  # EasyEffects with DeepFilterNet for noise suppression
+  services.easyeffects = {
+    enable = true;
+    preset = "noise-canceling";
+
+    extraPresets = {
+      noise-canceling = {
+        input = {
+          blocklist = [ ];
+          plugins_order = [ "deepfilternet#0" ];
+
+          "deepfilternet#0" = {
+            bypass = false;
+            input-gain = 0.0;
+            output-gain = 0.0;
+          };
         };
       };
     };

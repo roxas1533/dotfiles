@@ -48,5 +48,9 @@
   "scalingPriority": "hyprland",
   "theme.bar.border.location": "none",
   "bar.launcher.autoDetectIcon": true,
-  "theme.osd.enable": true
+  "theme.osd.enable": true,
+  "theme.bar.floating": false,
+  "bar.autoHide": "fullscreen",
+  "theme.bar.buttons.enableBorders": true,
+  "theme.bar.layer": "bottom"
 }

@@ -20,6 +20,10 @@
       url = "github:isaacphi/mcp-language-server";
       flake = false;
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -29,6 +33,7 @@
       nixos-wsl,
       home-manager,
       treefmt-nix,
+      disko,
       ...
     }@inputs:
     let
@@ -78,6 +83,8 @@
           modules = [
             # Import nixos-wsl module only when in WSL
             (if isWSL then nixos-wsl.nixosModules.default else { })
+            # Import disko module only for native (physical machine)
+            (if isWSL then { } else disko.nixosModules.disko)
             ./nix/systems/common
             # Import platform-specific configuration
             (if isWSL then ./nix/systems/wsl/configuration.nix else ./nix/systems/native/configuration.nix)
@@ -161,6 +168,113 @@
             program = toString (
               pkgs.writeShellScript "switch-native" ''
                 exec sudo nixos-rebuild switch --flake ${self}#nixos-native "$@"
+              ''
+            );
+          };
+
+          # Install NixOS from ISO boot (local installation)
+          # Usage: Boot NixOS ISO, then run: nix run github:roxas1533/dotfiles#install-native
+          install-native = {
+            type = "app";
+            program = toString (
+              pkgs.writeShellScript "install-native" ''
+                set -euo pipefail
+
+                # Enable flakes for all nix commands in this script
+                export NIX_CONFIG="experimental-features = nix-command flakes"
+
+                echo "=== NixOS Native Installation ==="
+                echo ""
+
+                # Check if running as root
+                if [ "$EUID" -ne 0 ]; then
+                  echo "Error: Please run as root (sudo)"
+                  exit 1
+                fi
+
+                # Show available disks and partitions
+                echo "Available disks and partitions:"
+                lsblk -o NAME,SIZE,TYPE,FSTYPE,LABEL,MODEL
+                echo ""
+
+                # Ask installation mode
+                echo "Installation mode:"
+                echo "  1) Fresh install (create new ESP)"
+                echo "  2) Dual-boot (reuse existing ESP, preserves Windows bootloader)"
+                read -p "Select mode [1]: " MODE
+                MODE=''${MODE:-1}
+
+                # Get target disk
+                read -p "Target disk for NixOS [/dev/sda]: " DISK
+                DISK=''${DISK:-/dev/sda}
+
+                if [ ! -b "$DISK" ]; then
+                  echo "Error: $DISK is not a valid block device"
+                  exit 1
+                fi
+
+                ESP_ARG=""
+                if [ "$MODE" = "2" ]; then
+                  echo ""
+                  echo "Existing EFI partitions (look for 'EFI System' or 'vfat'):"
+                  lsblk -o NAME,SIZE,FSTYPE,LABEL | grep -E "(vfat|EFI)" || true
+                  echo ""
+                  read -p "Existing ESP device (e.g., /dev/nvme0n1p1): " ESP_DEVICE
+                  if [ ! -b "$ESP_DEVICE" ]; then
+                    echo "Error: $ESP_DEVICE is not a valid block device"
+                    exit 1
+                  fi
+                  ESP_ARG="--arg espDevice \"\\\"$ESP_DEVICE\\\"\""
+                  echo ""
+                  echo "WARNING: This will create a new partition on $DISK"
+                  echo "         Existing ESP at $ESP_DEVICE will be reused (not formatted)"
+                else
+                  echo ""
+                  echo "WARNING: This will ERASE ALL DATA on $DISK"
+                fi
+
+                read -p "Are you sure? (yes/no): " CONFIRM
+                if [ "$CONFIRM" != "yes" ]; then
+                  echo "Aborted."
+                  exit 1
+                fi
+
+                echo ""
+                echo "Step 1/4: Partitioning with disko..."
+                eval "nix run github:nix-community/disko -- \
+                  --mode disko \
+                  --arg device \"\\\"$DISK\\\"\" \
+                  $ESP_ARG \
+                  ${self}/nix/systems/native/disko.nix"
+
+                echo ""
+                echo "Step 2/4: Preparing home directory..."
+                mkdir -p /mnt/home/ro
+                chown 1000:100 /mnt/home/ro
+
+                echo ""
+                echo "Step 3/4: Cloning dotfiles..."
+                DOTFILES_DIR="/mnt/home/ro/dotfiles"
+                if [ ! -d "$DOTFILES_DIR" ]; then
+                  ${pkgs.git}/bin/git clone https://github.com/roxas1533/dotfiles.git "$DOTFILES_DIR"
+                  chown -R 1000:100 "$DOTFILES_DIR"
+                  echo "Dotfiles cloned to $DOTFILES_DIR"
+                else
+                  echo "Dotfiles already exist at $DOTFILES_DIR"
+                fi
+
+                echo ""
+                echo "Step 4/4: Installing NixOS from local dotfiles..."
+                nixos-install --flake "$DOTFILES_DIR#nixos-native" --no-root-passwd
+
+                echo ""
+                echo "Installation complete!"
+                echo "Your system is configured with local dotfiles at /home/ro/dotfiles"
+                echo ""
+                read -p "Reboot now? (yes/no): " REBOOT
+                if [ "$REBOOT" = "yes" ]; then
+                  reboot
+                fi
               ''
             );
           };
