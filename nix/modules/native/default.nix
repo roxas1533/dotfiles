@@ -10,7 +10,11 @@
   imports = [
     ./desktop.nix
     ./hyprland.nix
+    ./walker.nix
   ];
+
+  # Add custom scripts to PATH
+  home.sessionPath = [ "$HOME/dotfiles/.bin" ];
 
   # Native-specific home-manager configuration
   home.packages = with pkgs; [
@@ -21,7 +25,7 @@
     vivaldi
     wezterm
     nautilus
-    freerdp # wlfreerdp for RDP connections
+    remmina # RDP client with GUI
 
     # Fonts for hyprpanel icons
     (pkgs.nerd-fonts.jetbrains-mono)

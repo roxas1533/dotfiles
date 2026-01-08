@@ -12,7 +12,11 @@ let
   hardwareConfigExists = builtins.pathExists hardwareConfigPath;
 in
 {
-  imports = [ ./disko.nix ] ++ lib.optionals hardwareConfigExists [ hardwareConfigPath ];
+  imports = [
+    ./disko.nix
+    ./nvidia.nix
+  ]
+  ++ lib.optionals hardwareConfigExists [ hardwareConfigPath ];
 
   # Bootloader configuration
   boot.loader.systemd-boot.enable = true;
@@ -68,8 +72,8 @@ in
   security.polkit.enable = true;
   nixpkgs.config.allowUnfree = true;
 
-  # Noise canceling (RNNoise-based)
-  programs.noisetorch.enable = true;
+  # Required for EasyEffects
+  programs.dconf.enable = true;
 
   # Native-specific packages
   environment.systemPackages = with pkgs; [
@@ -91,6 +95,7 @@ in
     brightnessctl # Backlight control
     playerctl # Media player control
     pavucontrol # PulseAudio volume control
+    deepfilternet # DeepFilterNet noise suppression
   ];
 
   # Additional user groups for native (adds to common)

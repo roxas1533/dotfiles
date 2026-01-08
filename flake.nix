@@ -192,13 +192,20 @@
                   exit 1
                 fi
 
-                # Show available disks
-                echo "Available disks:"
-                lsblk -d -o NAME,SIZE,MODEL
+                # Show available disks and partitions
+                echo "Available disks and partitions:"
+                lsblk -o NAME,SIZE,TYPE,FSTYPE,LABEL,MODEL
                 echo ""
 
-                # Default disk from disko.nix is /dev/sda
-                read -p "Target disk [/dev/sda]: " DISK
+                # Ask installation mode
+                echo "Installation mode:"
+                echo "  1) Fresh install (create new ESP)"
+                echo "  2) Dual-boot (reuse existing ESP, preserves Windows bootloader)"
+                read -p "Select mode [1]: " MODE
+                MODE=''${MODE:-1}
+
+                # Get target disk
+                read -p "Target disk for NixOS [/dev/sda]: " DISK
                 DISK=''${DISK:-/dev/sda}
 
                 if [ ! -b "$DISK" ]; then
@@ -206,8 +213,26 @@
                   exit 1
                 fi
 
-                echo ""
-                echo "WARNING: This will ERASE ALL DATA on $DISK"
+                ESP_ARG=""
+                if [ "$MODE" = "2" ]; then
+                  echo ""
+                  echo "Existing EFI partitions (look for 'EFI System' or 'vfat'):"
+                  lsblk -o NAME,SIZE,FSTYPE,LABEL | grep -E "(vfat|EFI)" || true
+                  echo ""
+                  read -p "Existing ESP device (e.g., /dev/nvme0n1p1): " ESP_DEVICE
+                  if [ ! -b "$ESP_DEVICE" ]; then
+                    echo "Error: $ESP_DEVICE is not a valid block device"
+                    exit 1
+                  fi
+                  ESP_ARG="--arg espDevice \"\\\"$ESP_DEVICE\\\"\""
+                  echo ""
+                  echo "WARNING: This will create a new partition on $DISK"
+                  echo "         Existing ESP at $ESP_DEVICE will be reused (not formatted)"
+                else
+                  echo ""
+                  echo "WARNING: This will ERASE ALL DATA on $DISK"
+                fi
+
                 read -p "Are you sure? (yes/no): " CONFIRM
                 if [ "$CONFIRM" != "yes" ]; then
                   echo "Aborted."
@@ -215,19 +240,36 @@
                 fi
 
                 echo ""
-                echo "Step 1/3: Partitioning $DISK with disko..."
-                nix run github:nix-community/disko -- \
+                echo "Step 1/4: Partitioning with disko..."
+                eval "nix run github:nix-community/disko -- \
                   --mode disko \
-                  --arg device "\"$DISK\"" \
-                  ${self}/nix/systems/native/disko.nix
+                  --arg device \"\\\"$DISK\\\"\" \
+                  $ESP_ARG \
+                  ${self}/nix/systems/native/disko.nix"
 
                 echo ""
-                echo "Step 2/3: Installing NixOS..."
-                nixos-install --flake ${self}#nixos-native --no-root-passwd
+                echo "Step 2/4: Preparing home directory..."
+                mkdir -p /mnt/home/ro
+                chown 1000:100 /mnt/home/ro
 
                 echo ""
-                echo "Step 3/3: Installation complete!"
-                echo "You can now reboot into your new NixOS system."
+                echo "Step 3/4: Cloning dotfiles..."
+                DOTFILES_DIR="/mnt/home/ro/dotfiles"
+                if [ ! -d "$DOTFILES_DIR" ]; then
+                  ${pkgs.git}/bin/git clone https://github.com/roxas1533/dotfiles.git "$DOTFILES_DIR"
+                  chown -R 1000:100 "$DOTFILES_DIR"
+                  echo "Dotfiles cloned to $DOTFILES_DIR"
+                else
+                  echo "Dotfiles already exist at $DOTFILES_DIR"
+                fi
+
+                echo ""
+                echo "Step 4/4: Installing NixOS from local dotfiles..."
+                nixos-install --flake "$DOTFILES_DIR#nixos-native" --no-root-passwd
+
+                echo ""
+                echo "Installation complete!"
+                echo "Your system is configured with local dotfiles at /home/ro/dotfiles"
                 echo ""
                 read -p "Reboot now? (yes/no): " REBOOT
                 if [ "$REBOOT" = "yes" ]; then
