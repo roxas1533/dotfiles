@@ -21,15 +21,20 @@ in
       hyprexpo
     ];
 
-    # Hyprland設定（hyprland.confの内容をNix式に変換）
     settings = {
       # Monitor configuration
-      monitor = ",1920x1080@60,auto,1";
+      # DP-3 (BenQ) on left, HDMI-A-1 (HP) on right (primary)
+      monitor = [
+        "DP-3,1920x1080@60,-1920x0,1"
+        "HDMI-A-1,1920x1080@60,0x0,1"
+      ];
 
       # Environment variables
       env = [
+        "XCURSOR_THEME,Adwaita"
         "XCURSOR_SIZE,24"
         "HYPRCURSOR_SIZE,24"
+        "GTK_THEME,Fluent-round-Dark"
         "ADW_DEBUG_COLOR_SCHEME,prefer-dark"
         # Qt6 dark mode (for fcitx5-configtool etc.)
         "QT_QPA_PLATFORMTHEME,adwaita"
@@ -47,6 +52,7 @@ in
         "hyprpaper"
         "hyprpanel"
         "fcitx5"
+        "walker --gapplication-service"
       ];
 
       # General settings
@@ -59,6 +65,13 @@ in
         resize_on_border = false;
         allow_tearing = false;
         layout = "dwindle";
+
+        # Floating window snap settings
+        snap = {
+          enabled = true;
+          window_gap = 10;
+          monitor_gap = 10;
+        };
       };
 
       # Decoration
@@ -80,6 +93,7 @@ in
           size = 1;
           passes = 2;
           vibrancy = 0.1696;
+          brightness = 0.7;
           popups = true;
           popups_ignorealpha = 0.2;
           input_methods = true;
@@ -164,7 +178,7 @@ in
         "$mainMod, E, exec, $fileManager"
         "$mainMod, G, togglefloating"
         "$mainMod, R, exec, $menu"
-        "$mainMod, P, pseudo"
+        "$mainMod, P, pin"
         "$mainMod, J, togglesplit"
 
         # hyprexpo
@@ -202,7 +216,7 @@ in
 
         # Special workspace
         "$mainMod, S, togglespecialworkspace, magic"
-        "$mainMod SHIFT, S, movetoworkspace, special:magic"
+        "$mainMod SHIFT, W, movetoworkspace, special:magic"
 
         # Scroll workspaces
         "$mainMod, mouse_down, workspace, e+1"
@@ -233,34 +247,22 @@ in
         ", XF86AudioPrev, exec, playerctl previous"
       ];
 
-      # Layer rules
       layerrule = [
-        "blur, bar-.*"
-        "ignorezero, bar-.*"
-        "blur, notifications-window"
-        "ignorezero, notifications-window"
-        "blur, indicator"
-        "ignorezero, indicator"
-        "blur, notificationsmenu"
-        "ignorezero, notificationsmenu"
-        "blur, dashboardmenu"
-        "ignorezero, dashboardmenu"
-        "blur, calendarmenu"
-        "ignorezero, calendarmenu"
-        "blur, fcitx"
-        "ignorezero, fcitx"
-        "blur, walker"
-        "ignorezero, walker"
+        "blur on, match:namespace bar-.*"
+        "blur on, match:namespace notifications-window"
+        "blur on, ignore_alpha 0.003, match:namespace indicator"
+        "blur on, ignore_alpha 0.003, match:namespace notificationsmenu"
+        "blur on, ignore_alpha 0.003, match:namespace dashboardmenu"
+        "blur on, ignore_alpha 0.003, match:namespace calendarmenu"
+        "blur on, match:namespace fcitx"
+        "blur on, match:namespace walker"
       ];
 
-      # Window rules
-      windowrulev2 = [
-        "opacity 0.7 0.7, class:^(org.gnome.Nautilus)$"
-      ];
-
+      # Window rules (0.53+ syntax)
       windowrule = [
-        "suppressevent maximize, class:.*"
-        "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+        "opacity 0.7 0.7, match:class ^(org.gnome.Nautilus)$"
+        "border_color rgb(ff9500) rgb(cc7700), match:pin 1"
+        "no_focus on, match:class ^$, match:title ^$, match:xwayland 1, match:float 1, match:fullscreen 0, match:pin 0"
       ];
 
       # Plugin settings
@@ -274,6 +276,27 @@ in
           gesture_fingers = 3;
           gesture_distance = 300;
           gesture_positive = true;
+        };
+      };
+    };
+  };
+
+  # EasyEffects with DeepFilterNet for noise suppression
+  services.easyeffects = {
+    enable = true;
+    preset = "noise-canceling";
+
+    extraPresets = {
+      noise-canceling = {
+        input = {
+          blocklist = [ ];
+          plugins_order = [ "deepfilternet#0" ];
+
+          "deepfilternet#0" = {
+            bypass = false;
+            input-gain = 0.0;
+            output-gain = 0.0;
+          };
         };
       };
     };
