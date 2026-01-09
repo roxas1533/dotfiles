@@ -70,7 +70,7 @@ in
     link_force "${dotfilesDir}/hyprpanel" "${configHome}/hyprpanel"
 
     # WezTerm configuration
-    link_force "${dotfilesDir}/wezterm" "${configHome}/wezterm"
+    link_force "${dotfilesDir}/wezterm/wezterm.lua" "${config.home.homeDirectory}/.wezterm.lua"
 
     # Hyprland configuration (if exists) - DEPRECATED
     # Hyprland config is now managed by Home Manager in nix/modules/native/hyprland.nix
