@@ -24,6 +24,7 @@
     # Languages & Runtimes
     lua
     luarocks
+    tree-sitter
 
     # LSP & Language Servers
     lua-language-server

@@ -57,19 +57,12 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end,
 })
 
--- vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineEnter" }, {
---     pattern = "*",
---     group = augroup("zenhan"),
---     callback = function()
---         vim.fn.jobstart({ "/mnt/c/desktop/tools/bin/zenhan.exe", "0" })
---     end,
--- })
-
 vim.opt["clipboard"] = "unnamedplus"
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.opt.expandtab = true
 vim.o.termguicolors = true
+vim.o.winborder = "rounded"
 vim.o.guicursor = vim.o.guicursor .. ",c:ver25,t:ver25"
 vim.o.ignorecase = true
 vim.o.smartcase = true
