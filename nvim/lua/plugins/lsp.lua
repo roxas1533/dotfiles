@@ -8,9 +8,6 @@ return {
         enabled = not vim.g.vscode,
         config = function()
             local cmp_nvim_lsp = require("cmp_nvim_lsp")
-            local handlers = {
-                ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
-            }
             local servers = {
                 "lua_ls",
                 "ruff",
@@ -81,7 +78,6 @@ return {
             -- }
             local default_setup = {
                 capabilities = capabilities,
-                handlers = handlers,
             }
             for _, server in ipairs(servers) do
                 local config = { settings = {} }
@@ -162,8 +158,8 @@ return {
                     }),
                 },
                 window = {
-                    documentation = cmp.config.window.bordered(),
                     completion = cmp.config.window.bordered(),
+                    documentation = cmp.config.window.bordered(),
                 },
             })
             vim.diagnostic.config({
@@ -174,9 +170,6 @@ return {
                         [vim.diagnostic.severity.INFO] = "",
                         [vim.diagnostic.severity.HINT] = "",
                     },
-                },
-                float = {
-                    border = "rounded",
                 },
             })
         end,
