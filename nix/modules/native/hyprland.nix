@@ -17,13 +17,10 @@ in
     enable = true;
 
     # プラグイン（自動ロード）
-    # TODO: hyprexpo disabled due to version mismatch (0.52.0 vs Hyprland 0.52.2)
-    # Re-enable when nixpkgs updates hyprexpo
-    # plugins = with pkgs.hyprlandPlugins; [
-    #   hyprexpo
-    # ];
+    plugins = with pkgs.hyprlandPlugins; [
+      hyprexpo
+    ];
 
-    # Hyprland設定（hyprland.confの内容をNix式に変換）
     settings = {
       # Monitor configuration
       # DP-3 (BenQ) on left, HDMI-A-1 (HP) on right (primary)
@@ -184,8 +181,8 @@ in
         "$mainMod, P, pin"
         "$mainMod, J, togglesplit"
 
-        # hyprexpo (disabled - version mismatch)
-        # "$mainMod, TAB, hyprexpo:expo, toggle"
+        # hyprexpo
+        "$mainMod, TAB, hyprexpo:expo, toggle"
 
         # Move focus
         "$mainMod, left, movefocus, l"
@@ -250,51 +247,37 @@ in
         ", XF86AudioPrev, exec, playerctl previous"
       ];
 
-      # Layer rules
       layerrule = [
-        "blur, bar-.*"
-        "ignorezero, bar-.*"
-        "blur, notifications-window"
-        "ignorezero, notifications-window"
-        "blur, indicator"
-        "ignorezero, indicator"
-        "blur, notificationsmenu"
-        "ignorezero, notificationsmenu"
-        "blur, dashboardmenu"
-        "ignorezero, dashboardmenu"
-        "blur, calendarmenu"
-        "ignorezero, calendarmenu"
-        "blur, fcitx"
-        "ignorezero, fcitx"
-        "blur, walker"
-        "ignorezero, walker"
+        "blur on, match:namespace bar-.*"
+        "blur on, match:namespace notifications-window"
+        "blur on, ignore_alpha 0.003, match:namespace indicator"
+        "blur on, ignore_alpha 0.003, match:namespace notificationsmenu"
+        "blur on, ignore_alpha 0.003, match:namespace dashboardmenu"
+        "blur on, ignore_alpha 0.003, match:namespace calendarmenu"
+        "blur on, match:namespace fcitx"
+        "blur on, match:namespace walker"
       ];
 
-      # Window rules
-      windowrulev2 = [
-        "opacity 0.7 0.7, class:^(org.gnome.Nautilus)$"
-        # Pinned window styling (orange border for both active and inactive)
-        "bordercolor rgb(ff9500) rgb(cc7700), pinned:1"
-      ];
-
+      # Window rules (0.53+ syntax)
       windowrule = [
-        "suppressevent maximize, class:.*"
-        "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+        "opacity 0.7 0.7, match:class ^(org.gnome.Nautilus)$"
+        "border_color rgb(ff9500) rgb(cc7700), match:pin 1"
+        "no_focus on, match:class ^$, match:title ^$, match:xwayland 1, match:float 1, match:fullscreen 0, match:pin 0"
       ];
 
-      # Plugin settings (hyprexpo disabled - version mismatch)
-      # plugin = {
-      #   hyprexpo = {
-      #     columns = 3;
-      #     gap_size = 5;
-      #     bg_col = "rgb(111111)";
-      #     workspace_method = "center current";
-      #     enable_gesture = true;
-      #     gesture_fingers = 3;
-      #     gesture_distance = 300;
-      #     gesture_positive = true;
-      #   };
-      # };
+      # Plugin settings
+      plugin = {
+        hyprexpo = {
+          columns = 3;
+          gap_size = 5;
+          bg_col = "rgb(111111)";
+          workspace_method = "center current";
+          enable_gesture = true;
+          gesture_fingers = 3;
+          gesture_distance = 300;
+          gesture_positive = true;
+        };
+      };
     };
   };
 
