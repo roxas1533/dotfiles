@@ -13,8 +13,14 @@
     '';
   };
 
+  # Enable systemd-networkd (config in /etc/systemd/network/)
+  systemd.network.enable = true;
+
   # WSL doesn't need additional user groups beyond common
   # WSL doesn't need additional packages beyond common
+
+  # Cloudflare WARP VPN
+  services.cloudflare-warp.enable = true;
 
   # Nix settings
   nix.settings = {

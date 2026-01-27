@@ -11,10 +11,14 @@
 
 {
   # Enable flakes and nix-command
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix.settings = {
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    # SSL certificate for network access in sandboxed builds
+    ssl-cert-file = "/etc/ssl/certs/ca-certificates.crt";
+  };
 
   # Virtualization & Services
   virtualisation.docker.enable = true;
@@ -52,6 +56,7 @@
     builtins.elem (pkgs.lib.getName pkg) [
       "gh-copilot"
       "claude-code"
+      "cloudflare-warp"
     ];
 
   # Core system packages (minimal set needed on all platforms)

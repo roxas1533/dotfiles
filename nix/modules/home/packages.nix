@@ -8,6 +8,7 @@
     gnumake
     rustup
     glibc.static
+    sqlit-tui
 
     # Version Control & Git Tools
     lazygit
@@ -16,9 +17,11 @@
 
     # Search & File Utilities
     ripgrep
+    fd
     eza
     yazi
     jq
+    chafa
     python313Packages.markitdown
 
     # Languages & Runtimes
@@ -48,7 +51,6 @@
     fishPlugins.hydro
 
     # MCP Servers
-    mcp-server-mysql
     mcp-language-server
     github-mcp-server
   ];

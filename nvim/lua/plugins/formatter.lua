@@ -11,7 +11,7 @@ return {
                     null_ls.builtins.diagnostics.djlint,
                     null_ls.builtins.formatting.djlint,
                     null_ls.builtins.formatting.nixfmt,
-                    null_ls.builtins.formatting.prettierd,
+                    null_ls.builtins.formatting.biome,
                 },
                 on_attach = function(client, bufnr)
                     if client.supports_method("textDocument/formatting") then
