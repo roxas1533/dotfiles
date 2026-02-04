@@ -6,8 +6,7 @@ return {
         build = ":TSUpdate",
         config = function()
             require("nvim-treesitter").setup({})
-
-            local parsers = {
+            require("nvim-treesitter").install({
                 "bash",
                 "c",
                 "cpp",
@@ -21,13 +20,10 @@ return {
                 "python",
                 "rust",
                 "typescript",
-            }
-
-            -- Install parsers asynchronously
-            require("nvim-treesitter").install(parsers)
-
+            }, {})
             -- Enable treesitter highlighting and indentation
             vim.api.nvim_create_autocmd("FileType", {
+                group = vim.api.nvim_create_augroup("vim-treesitter-start", {}),
                 callback = function(args)
                     pcall(vim.treesitter.start, args.buf)
                 end,

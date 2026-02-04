@@ -10,6 +10,5 @@
   # Currently minimal, can be expanded with WSL-specific needs
 
   home.packages = with pkgs; [
-    # Add WSL-specific packages here if needed
   ];
 }

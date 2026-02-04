@@ -1,18 +1,23 @@
 # Disko configuration for physical machine
-# Simple GPT layout: ESP (512M) + root (ext4)
+# Supports both fresh install and dual-boot scenarios
 #
-# Usage from NixOS ISO:
-#   sudo nix run github:roxas1533/dotfiles#install-native
+# Fresh install (creates new ESP):
+#   nix run github:nix-community/disko -- --mode disko \
+#     --arg device '"/dev/sda"' ./disko.nix
 #
-# Or manually:
-#   sudo nix run github:nix-community/disko -- --mode disko \
-#     --arg device '"/dev/nvme0n1"' ./disko.nix
+# Dual-boot (reuse existing ESP):
+#   nix run github:nix-community/disko -- --mode disko \
+#     --arg device '"/dev/sda"' \
+#     --arg espDevice '"/dev/sda1"' ./disko.nix
 
-{
-  lib,
-  device ? "/dev/sda",
-  ...
-}:
+{ lib, ... }:
+
+let
+  # Default values for standalone disko usage
+  # When used as NixOS module, these define the actual disk layout
+  device = "/dev/nvme0n1";
+  espDevice = null; # Set to e.g. "/dev/nvme0n1p1" for dual-boot
+in
 
 {
   disko.devices = {
@@ -21,31 +26,44 @@
       inherit device;
       content = {
         type = "gpt";
-        partitions = {
-          ESP = {
-            name = "ESP";
-            size = "512M";
-            type = "EF00";
-            content = {
-              type = "filesystem";
-              format = "vfat";
-              mountpoint = "/boot";
-              mountOptions = [
-                "fmask=0022"
-                "dmask=0022"
-              ];
+        partitions =
+          # Fresh install: create ESP + root
+          (lib.optionalAttrs (espDevice == null) {
+            ESP = {
+              name = "ESP";
+              size = "512M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+                mountOptions = [
+                  "fmask=0022"
+                  "dmask=0022"
+                ];
+              };
+            };
+          })
+          # Root partition (always created)
+          // {
+            root = {
+              name = "root";
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
+              };
             };
           };
-          root = {
-            name = "root";
-            size = "100%";
-            content = {
-              type = "filesystem";
-              format = "ext4";
-              mountpoint = "/";
-            };
-          };
-        };
+      };
+    };
+
+    # Dual-boot: mount existing ESP without formatting
+    nodev = lib.optionalAttrs (espDevice != null) {
+      "/boot" = {
+        fsType = "vfat";
+        device = espDevice;
       };
     };
   };
