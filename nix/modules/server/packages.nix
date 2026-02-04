@@ -7,6 +7,9 @@
     fishPlugins.z
     fishPlugins.hydro
 
+    # Editor
+    neovim
+
     # Terminal Multiplexer
     zellij
 
@@ -14,6 +17,7 @@
     lnav
 
     # Version Control & Git Tools
+    git
     lazygit
     gh
     delta
