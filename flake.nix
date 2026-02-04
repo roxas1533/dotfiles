@@ -129,6 +129,25 @@
         ];
       };
 
+      # Server home-manager configuration (for rocky user)
+      homeConfigurations.server = home-manager.lib.homeManagerConfiguration {
+        pkgs = mkPkgs system;
+        modules = [
+          ./nix/modules/server
+          {
+            home = {
+              username = "rocky";
+              homeDirectory = "/home/rocky";
+              stateVersion = "25.05";
+            };
+            _module.args = {
+              inherit helpers;
+              dotfilesDir = "/home/rocky/dotfiles";
+            };
+          }
+        ];
+      };
+
       # Apps for CI and development
       apps.${system} =
         let
