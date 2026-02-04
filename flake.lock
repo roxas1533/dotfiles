@@ -72,22 +72,6 @@
         "type": "github"
       }
     },
-    "mcp-server-mysql": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1763458846,
-        "narHash": "sha256-TCXWQpYRVRCH86MzrhBwqVh03w+D4qXAmziS/QqU3oA=",
-        "owner": "benborla",
-        "repo": "mcp-server-mysql",
-        "rev": "6a0367834ea0fb5e5c94b9711e3e2756966789ea",
-        "type": "github"
-      },
-      "original": {
-        "owner": "benborla",
-        "repo": "mcp-server-mysql",
-        "type": "github"
-      }
-    },
     "nixos-wsl": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -145,7 +129,6 @@
         "disko": "disko",
         "home-manager": "home-manager",
         "mcp-language-server": "mcp-language-server",
-        "mcp-server-mysql": "mcp-server-mysql",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",
         "treefmt-nix": "treefmt-nix"

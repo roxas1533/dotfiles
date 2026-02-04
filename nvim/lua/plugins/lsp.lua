@@ -108,10 +108,6 @@ return {
             end
             vim.lsp.config("*", default_setup)
 
-            vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-                vim.lsp.diagnostic.on_publish_diagnostics,
-                { virtual_text = true, underline = true, signs = true, update_in_insert = true }
-            )
             local cmp = require("cmp")
             cmp.setup.cmdline(":", {
                 mapping = cmp.mapping.preset.cmdline(),
@@ -171,6 +167,9 @@ return {
                         [vim.diagnostic.severity.HINT] = "",
                     },
                 },
+                virtual_text = true,
+                underline = true,
+                update_in_insert = true,
             })
         end,
     },

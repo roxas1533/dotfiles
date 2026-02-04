@@ -12,10 +12,6 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mcp-server-mysql = {
-      url = "github:benborla/mcp-server-mysql";
-      flake = false;
-    };
     mcp-language-server = {
       url = "github:isaacphi/mcp-language-server";
       flake = false;
@@ -51,6 +47,7 @@
             pkg:
             builtins.elem (nixpkgs.lib.getName pkg) [
               "claude-code"
+              "cloudflare-warp"
             ];
           overlays = overlays;
         };

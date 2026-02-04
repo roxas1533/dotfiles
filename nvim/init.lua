@@ -103,6 +103,7 @@ vim.diagnostic.config({
     signs = true,
     underline = true,
     update_in_insert = true,
+    virtual_text = true,
 })
 vim.cmd([[highlight DiagnosticUnderlineError guisp=#FF0000 gui=undercurl]])
 vim.cmd([[highlight DiagnosticUnderlineWarn guisp=#FFA500 gui=undercurl]])
