@@ -34,6 +34,7 @@ function fullpath
     echo $full_path | wl-copy
 end
 
+set -x NIX_CONFIG "access-tokens = github.com=$(gh auth token)"
 set -x LANG ja_JP.UTF-8
 set -x DISPLAY :0
 set -x DENO_TLS_CA_STORE system

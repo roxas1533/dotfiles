@@ -8,7 +8,7 @@ on:
       - 'nix/**'
       - 'configuration.nix'
       - '.github/workflows/nix-flake.yaml'
-  pull_request:
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

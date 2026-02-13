@@ -44,7 +44,6 @@
     # Infrastructure & Services
     docker
     cloudflared
-    redsocks
     sshpass
 
     # Fish Shell Plugins
