@@ -1,2 +1,16 @@
 // Zellij configuration
 // https://zellij.dev/documentation/configuration
+
+theme "catppuccin-mocha"
+mouse_mode true
+copy_on_select true
+
+keybinds {
+    normal {
+        unbind "Ctrl h"
+        bind "Alt m" { SwitchToMode "Move"; }
+    }
+    move {
+        bind "Alt m" { SwitchToMode "Normal"; }
+    }
+}

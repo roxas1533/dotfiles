@@ -1,11 +1,3 @@
-function nsl --description 'Shortcut for nix shell nixpkgs#...'
-    set -l pkgs
-    for arg in $argv
-        set -a pkgs "nixpkgs#$arg"
-    end
-    nix shell $pkgs
-end
-
 function nix --wraps nix --description 'Nix wrapper with shell detection'
     if test (count $argv) -ge 1; and contains -- $argv[1] shell develop
         if test "$argv[1]" = shell

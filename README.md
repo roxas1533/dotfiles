@@ -66,6 +66,22 @@ This will:
    nix run . -- switch --flake .#ro
    ```
 
+### Server (Home Manager Standalone)
+
+For non-NixOS servers with standalone home-manager:
+
+1. Install Nix:
+   ```sh
+   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+   ```
+
+2. Clone and apply:
+   ```sh
+   git clone https://github.com/roxas1533/dotfiles.git ~/dotfiles
+   cd ~/dotfiles
+   home-manager switch --flake .#server -b backup
+   ```
+
 ## Daily Usage
 
 Apply changes after editing configuration:
@@ -73,6 +89,9 @@ Apply changes after editing configuration:
 ```sh
 # NixOS (WSL/Native auto-detect)
 nrs
+
+# Server (Home Manager Standalone)
+nrs -s
 
 # Linux (Home Manager)
 home-manager switch --flake .#ro
