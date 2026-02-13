@@ -74,14 +74,12 @@ jobs:
     if: always()
     steps:
       - name: Check CI status
-        env:
-          RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
-          echo "Job results: $RESULTS"
-          for result in $RESULTS; do
-            case "$result" in
-              success|skipped) ;;
-              *) echo "CI failed"; exit 1 ;;
-            esac
-          done
-          echo "CI passed"
+          check() { [ "$1" != "true" ] || [ "$2" = "success" ]; }
+
+          check "${{ needs.changes.outputs.nix }}" "${{ needs.nix-build.result }}" &&
+          check "${{ needs.changes.outputs.nix }}" "${{ needs.nix-flake.result }}" &&
+          check "${{ needs.changes.outputs.nix }}" "${{ needs.nix-format.result }}" &&
+          check "${{ needs.changes.outputs.nvim }}" "${{ needs.nix-neovim.result }}" &&
+          check "${{ needs.changes.outputs.fish }}" "${{ needs.fish.result }}" &&
+          echo "CI passed" || { echo "CI failed"; exit 1; }
