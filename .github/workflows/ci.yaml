@@ -74,13 +74,14 @@ jobs:
     if: always()
     steps:
       - name: Check CI status
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
-          results='${{ toJSON(needs.*.result) }}'
-          echo "Job results: $results"
-
-          if echo "$results" | grep -qE '"failure"|"cancelled"'; then
-            echo "CI failed"
-            exit 1
-          fi
-
+          echo "Job results: $RESULTS"
+          for result in $RESULTS; do
+            case "$result" in
+              success|skipped) ;;
+              *) echo "CI failed"; exit 1 ;;
+            esac
+          done
           echo "CI passed"
