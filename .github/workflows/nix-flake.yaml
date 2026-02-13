@@ -10,10 +10,6 @@ on:
       - '.github/workflows/nix-flake.yaml'
   workflow_call:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   check:
     runs-on: ubuntu-latest
