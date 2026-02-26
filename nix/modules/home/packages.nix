@@ -35,7 +35,7 @@
     biome
     typos-lsp
     nil # Nix LSP
-    nixfmt-rfc-style
+    nixfmt
 
     # AI & CLI Tools
     claude-code
