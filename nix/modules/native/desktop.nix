@@ -78,20 +78,18 @@
     Theme=FluentDark
   '';
 
-  # fcitx5キーバインド設定（無変換でIMEオフ、変換でIMEオン）
+  # fcitx5キーバインド設定（常時ON、Mozc内で日本語/Direct切替）
   xdg.configFile."fcitx5/config".text = ''
     [Hotkey]
-    TriggerKeys=
+    TriggerKeys=Zenkakuhankaku
     EnumerateWithTriggerKeys=True
 
     [Hotkey/ActivateKeys]
-    0=Henkan
 
     [Hotkey/DeactivateKeys]
-    0=Muhenkan
 
     [Behavior]
-    ActiveByDefault=False
+    ActiveByDefault=True
     ShareInputState=No
   '';
 

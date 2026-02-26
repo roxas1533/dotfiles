@@ -6,11 +6,13 @@ let
   };
 in
 {
-  # Hyprpaper wallpaper configuration
+  # Hyprpaper wallpaper configuration (0.53+ syntax)
   xdg.configFile."hypr/hyprpaper.conf".text = ''
-    preload = ${wallpaper}
-    wallpaper = ,${wallpaper}
-    splash = false
+    wallpaper {
+      monitor =
+      path = ${wallpaper}
+      fit_mode = cover
+    }
   '';
 
   wayland.windowManager.hyprland = {
@@ -25,10 +27,10 @@ in
 
     settings = {
       # Monitor configuration
-      # DP-3 (BenQ) on left, HDMI-A-1 (HP) on right (primary)
+      # DP-1 (BenQ) on left, HDMI-A-2 (HP) on right (primary)
       monitor = [
-        "DP-3,1920x1080@60,-1920x0,1"
-        "HDMI-A-1,1920x1080@60,0x0,1"
+        "DP-1,1920x1080@60,-1920x0,1"
+        "HDMI-A-2,1920x1080@60,0x0,1"
       ];
 
       # Environment variables
@@ -52,9 +54,9 @@ in
       # Autostart
       exec-once = [
         "hyprpaper"
-        "hyprpanel"
+        "swaync"
         "fcitx5"
-        "walker --gapplication-service"
+        # walker is managed by systemd via programs.walker.runAsService
       ];
 
       # General settings
@@ -231,14 +233,14 @@ in
         "$mainMod, mouse:273, resizewindow"
       ];
 
-      # Volume/brightness bindings
+      # Volume/brightness bindings (using SwayOSD for visual feedback)
       bindel = [
-        ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
-        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-        ", XF86MonBrightnessUp, exec, brightnessctl -e4 -n2 set 5%+"
-        ", XF86MonBrightnessDown, exec, brightnessctl -e4 -n2 set 5%-"
+        ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
+        ", XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
+        ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
+        ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
+        ", XF86MonBrightnessUp, exec, swayosd-client --brightness raise"
+        ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
       ];
 
       # Media bindings
@@ -250,12 +252,14 @@ in
       ];
 
       layerrule = [
-        "blur on, match:namespace bar-.*"
-        "blur on, match:namespace notifications-window"
-        "blur on, ignore_alpha 0.003, match:namespace indicator"
-        "blur on, ignore_alpha 0.003, match:namespace notificationsmenu"
-        "blur on, ignore_alpha 0.003, match:namespace dashboardmenu"
-        "blur on, ignore_alpha 0.003, match:namespace calendarmenu"
+        # Ashell bar
+        "blur on, match:namespace ashell"
+        # SwayNC notifications (ignore_alpha prevents full-screen backdrop blur)
+        "blur on, ignore_alpha 0.5, match:namespace swaync-control-center"
+        "blur on, ignore_alpha 0.5, match:namespace swaync-notification-window"
+        # SwayOSD (volume/brightness indicator)
+        "blur on, match:namespace swayosd"
+        # Input methods and launcher
         "blur on, match:namespace fcitx"
         "blur on, match:namespace walker"
       ];
@@ -265,6 +269,10 @@ in
         "opacity 0.7 0.7, match:class ^(org.gnome.Nautilus)$"
         "border_color rgb(ff9500) rgb(cc7700), match:pin 1"
         "no_focus on, match:class ^$, match:title ^$, match:xwayland 1, match:float 1, match:fullscreen 0, match:pin 0"
+        # Remmina RDP connection window
+        "float on, match:class ^(org.remmina.Remmina)$, match:title ^main$"
+        "size 3840 1080, match:class ^(org.remmina.Remmina)$, match:title ^main$"
+        "workspace special:magic, match:class ^(org.remmina.Remmina)$, match:title ^main$"
       ];
 
       # Plugin settings (hyprexpo disabled - version mismatch)
