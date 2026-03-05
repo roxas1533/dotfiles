@@ -24,6 +24,24 @@ in
   boot.loader.systemd-boot.consoleMode = "max";
   console.keyMap = "jp106";
 
+  # Automatic garbage collection (delete generations older than 7 days)
+  nix.gc = {
+    automatic = true;
+    dates = "Tue 13:00";
+    options = "--delete-older-than 7d";
+  };
+
+  # Rebuild bootloader after garbage collection
+  systemd.services.nix-gc-bootloader = {
+    description = "Rebuild bootloader after nix garbage collection";
+    after = [ "nix-gc.service" ];
+    wantedBy = [ "nix-gc.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "/run/current-system/bin/switch-to-configuration boot";
+    };
+  };
+
   # Networking
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
@@ -39,6 +57,19 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+
+    wireplumber.extraConfig."10-disable-capture-suspend" = {
+      "monitor.alsa.rules" = [
+        {
+          matches = [
+            { "node.name" = "~alsa_input.*"; }
+          ];
+          actions.update-props = {
+            "session.suspend-timeout-seconds" = 0;
+          };
+        }
+      ];
+    };
   };
 
   # xdg-desktop-portal for screen sharing
@@ -58,11 +89,11 @@ in
     enable = true;
     settings = {
       initial_session = {
-        command = "Hyprland";
+        command = "start-hyprland";
         user = "ro";
       };
       default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd start-hyprland";
         user = "greeter";
       };
     };
@@ -83,7 +114,6 @@ in
 
     # Hyprland ecosystem
     waybar # Status bar
-    walker # Application launcher
     swaylock # Screen locker
     swayidle # Idle management daemon
     grim # Screenshot tool
@@ -91,11 +121,13 @@ in
     wlr-randr # Display configuration
 
     # File manager and utilities
-    xfce.thunar
+    thunar
     brightnessctl # Backlight control
     playerctl # Media player control
     pavucontrol # PulseAudio volume control
+    qpwgraph # PipeWire patchbay GUI
     deepfilternet # DeepFilterNet noise suppression
+    alsa-utils # ALSA mixer control (for alsa-mixer-init.service)
   ];
 
   # Additional user groups for native (adds to common)
