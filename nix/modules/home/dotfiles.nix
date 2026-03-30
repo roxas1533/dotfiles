@@ -63,11 +63,8 @@ in
     mkdir -p "${config.home.homeDirectory}/.claude"
     link_force "${dotfilesDir}/claude/settings.json" "${config.home.homeDirectory}/.claude/settings.json"
 
-    # AGS/HyprPanel configuration
-    link_force "${dotfilesDir}/ags" "${configHome}/ags"
-
-    # HyprPanel configuration
-    link_force "${dotfilesDir}/hyprpanel" "${configHome}/hyprpanel"
+    # Ashell configuration
+    link_force "${dotfilesDir}/ashell" "${configHome}/ashell"
 
     # WezTerm configuration
     link_force "${dotfilesDir}/wezterm/wezterm.lua" "${config.home.homeDirectory}/.wezterm.lua"

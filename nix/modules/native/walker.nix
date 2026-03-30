@@ -1,101 +1,117 @@
 # Walker application launcher configuration
-{ ... }:
+{ inputs, ... }:
 
 {
-  # Walker config
-  xdg.configFile."walker/config.toml".text = ''
-    placeholder = "Search..."
-    show_initial_entries = true
-    ssh_host_file = ""
-    terminal = "wezterm"
-    orientation = "vertical"
-    fullscreen = false
-    scrollbar_policy = "automatic"
+  imports = [
+    inputs.walker.homeManagerModules.walker
+  ];
 
-    [ui]
-    anchors.top = true
-    anchors.bottom = false
-    anchors.left = true
-    anchors.right = true
+  programs.walker = {
+    enable = true;
+    runAsService = true;
 
-    [ui.window]
-    box.width = 600
-    box.height = 400
-    box.margins.top = 200
+    config = {
+      placeholder = "Search...";
+      show_initial_entries = true;
+      ssh_host_file = "";
+      terminal = "wezterm";
+      orientation = "vertical";
+      fullscreen = false;
+      scrollbar_policy = "automatic";
 
-    [activation_mode]
-    use_alt = false
-    disabled = true
+      ui = {
+        anchors.top = true;
+        anchors.bottom = false;
+        anchors.left = true;
+        anchors.right = true;
+        window = {
+          box.width = 600;
+          box.height = 400;
+          box.margins.top = 200;
+        };
+      };
 
-    [search]
-    delay = 0
-    force_keyboard_focus = true
+      activation_mode = {
+        use_alt = false;
+        disabled = true;
+      };
 
-    [builtins.applications]
-    weight = 5
-    name = "applications"
+      search = {
+        delay = 0;
+        force_keyboard_focus = true;
+      };
 
-    [builtins.runner]
-    weight = 3
-    name = "runner"
+      builtins = {
+        applications = {
+          weight = 5;
+          name = "applications";
+        };
+        runner = {
+          weight = 3;
+          name = "runner";
+        };
+        websearch = {
+          weight = 1;
+          name = "websearch";
+          engines = [ "google" ];
+        };
+        clipboard = {
+          weight = 2;
+          name = "clipboard";
+          max_entries = 10;
+        };
+      };
+    };
 
-    [builtins.websearch]
-    weight = 1
-    name = "websearch"
-    engines = ["google"]
+    # Catppuccin Mocha theme
+    themes."catppuccin" = {
+      style = ''
+        * {
+          font-family: "JetBrainsMono Nerd Font", monospace;
+          font-size: 14px;
+        }
 
-    [builtins.clipboard]
-    weight = 2
-    name = "clipboard"
-    max_entries = 10
-  '';
+        #window {
+          background: rgba(30, 30, 46, 0.9);
+          border-radius: 12px;
+          border: 2px solid rgba(180, 190, 254, 0.3);
+        }
 
-  # Walker style (minimal dark theme)
-  xdg.configFile."walker/style.css".text = ''
-    * {
-      font-family: "JetBrainsMono Nerd Font", monospace;
-      font-size: 14px;
-    }
+        #box {
+          padding: 10px;
+        }
 
-    #window {
-      background: rgba(30, 30, 46, 0.9);
-      border-radius: 12px;
-      border: 2px solid rgba(180, 190, 254, 0.3);
-    }
+        #search {
+          background: rgba(49, 50, 68, 0.8);
+          border-radius: 8px;
+          padding: 10px 15px;
+          margin-bottom: 10px;
+          color: #cdd6f4;
+          border: none;
+        }
 
-    #box {
-      padding: 10px;
-    }
+        #list {
+          background: transparent;
+        }
 
-    #search {
-      background: rgba(49, 50, 68, 0.8);
-      border-radius: 8px;
-      padding: 10px 15px;
-      margin-bottom: 10px;
-      color: #cdd6f4;
-      border: none;
-    }
+        #item {
+          padding: 8px 12px;
+          border-radius: 6px;
+          margin: 2px 0;
+        }
 
-    #list {
-      background: transparent;
-    }
+        #item:selected {
+          background: rgba(137, 180, 250, 0.3);
+        }
 
-    #item {
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin: 2px 0;
-    }
+        #text {
+          color: #cdd6f4;
+        }
 
-    #item:selected {
-      background: rgba(137, 180, 250, 0.3);
-    }
-
-    #text {
-      color: #cdd6f4;
-    }
-
-    #icon {
-      margin-right: 10px;
-    }
-  '';
+        #icon {
+          margin-right: 10px;
+        }
+      '';
+    };
+  };
 }

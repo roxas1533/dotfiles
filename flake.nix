@@ -28,6 +28,10 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    walker = {
+      url = "github:abenz1267/walker";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -103,6 +107,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs; };
               home-manager.users.ro =
                 { pkgs, ... }:
                 {
@@ -166,7 +171,7 @@
             programs = {
               nixfmt = {
                 enable = true;
-                package = pkgs.nixfmt-rfc-style;
+                package = pkgs.nixfmt;
               };
               stylua.enable = true;
             };
