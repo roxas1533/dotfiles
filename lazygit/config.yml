@@ -1,7 +1,13 @@
 gui:
   nerdFontsVersion: "3"
   tabSize: 4
+  expandFocusedSidePanel: true
+  expandedSidePanelWeight: 15
+  sidePanelWidth: 0.15
 git:
   pagers:
     - colorArg: always
-      pager: delta --dark --paging=never
+      pager: delta --dark --paging=never --side-by-side
+os:
+  editPreset: nvim-remote
+  edit: 'if test -n "$NVIM"; nvim --server "$NVIM" --remote-send "<C-\\><C-n>:q!<CR>:DiffviewOpen<CR>"; else; nvim -- {{filename}}; end'

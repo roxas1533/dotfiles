@@ -41,6 +41,10 @@
     claude-code
     gemini-cli
 
+    # Bugzilla
+    bugzilla-cli
+    rclone
+
     # Infrastructure & Services
     docker
     cloudflared

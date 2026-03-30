@@ -12,9 +12,17 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     mcp-language-server = {
       url = "github:isaacphi/mcp-language-server";
       flake = false;
+    };
+    cloud-bugzilla-cli = {
+      url = "github:roxas1533/cloud-bugzilla-cli";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     disko = {
       url = "github:nix-community/disko";
@@ -29,6 +37,7 @@
       nixos-wsl,
       home-manager,
       treefmt-nix,
+      claude-code,
       disko,
       ...
     }@inputs:
