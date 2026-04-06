@@ -18,6 +18,8 @@
     ];
     # SSL certificate for network access in sandboxed builds
     ssl-cert-file = "/etc/ssl/certs/ca-certificates.crt";
+    # Automatically hard-link identical files in the store
+    auto-optimise-store = true;
   };
 
   # Virtualization & Services

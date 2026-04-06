@@ -57,7 +57,16 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end,
 })
 
-vim.opt["clipboard"] = "unnamedplus"
+-- OSC 52: yank copies to host clipboard via terminal escape sequence.
+-- Works over SSH and WSL without needing a clipboard provider.
+vim.api.nvim_create_autocmd("TextYankPost", {
+    group = vim.api.nvim_create_augroup("osc52_yank", { clear = true }),
+    callback = function()
+        if vim.v.event.regname == "" or vim.v.event.regname == "+" then
+            require("vim.ui.clipboard.osc52").copy("+")(vim.v.event.regcontents)
+        end
+    end,
+})
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.opt.expandtab = true
@@ -73,31 +82,6 @@ vim.o.number = true
 vim.opt.encoding = "utf-8"
 vim.opt.fileencodings = { "ucs-bom", "utf-8", "cp932", "sjis" }
 vim.o.shell = "fish"
-
-if false then
-    if vim.fn.has("wsl") == 1 then
-        if vim.fn.executable("wl-copy") == 0 then
-            print("wl-clipboard not found, clipboard integration won't work")
-        else
-            vim.g.clipboard = {
-                name = "wl-clipboard (wsl)",
-                copy = {
-                    ["+"] = "wl-copy --foreground --type text/plain",
-                    ["*"] = "wl-copy --foreground --primary --type text/plain",
-                },
-                paste = {
-                    ["+"] = function()
-                        return vim.fn.systemlist('wl-paste --no-newline|sed -e "s/\r$//"', { "" }, 1) -- '1' keeps empty lines
-                    end,
-                    ["*"] = function()
-                        return vim.fn.systemlist('wl-paste --primary --no-newline|sed -e "s/\r$//"', { "" }, 1)
-                    end,
-                },
-                cache_enabled = true,
-            }
-        end
-    end
-end
 
 vim.diagnostic.config({
     signs = true,

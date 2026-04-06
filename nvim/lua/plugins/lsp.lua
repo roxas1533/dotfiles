@@ -68,8 +68,8 @@ return {
                     "<cmd>lua vim.diagnostic.open_float()<CR>",
                     { silent = true, buffer = buffer }
                 )
-                vim.keymap.set("n", "g]", "<cmd>lua vim.diagnostic.goto_next()<CR>", { silent = true, buffer = buffer })
-                vim.keymap.set("n", "g[", "<cmd>lua vim.diagnostic.goto_prev()<CR>", { silent = true, buffer = buffer })
+                vim.keymap.set("n", "g]", function() vim.diagnostic.jump({ count = 1 }) end, { silent = true, buffer = buffer })
+                vim.keymap.set("n", "g[", function() vim.diagnostic.jump({ count = -1 }) end, { silent = true, buffer = buffer })
             end)
             local capabilities = cmp_nvim_lsp.default_capabilities()
             -- capabilities.textDocument.foldingRange = {
