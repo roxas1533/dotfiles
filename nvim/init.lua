@@ -57,16 +57,21 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end,
 })
 
--- OSC 52: yank copies to host clipboard via terminal escape sequence.
--- Works over SSH and WSL without needing a clipboard provider.
-vim.api.nvim_create_autocmd("TextYankPost", {
-    group = vim.api.nvim_create_augroup("osc52_yank", { clear = true }),
-    callback = function()
-        if vim.v.event.regname == "" or vim.v.event.regname == "+" then
-            require("vim.ui.clipboard.osc52").copy("+")(vim.v.event.regcontents)
-        end
-    end,
-})
+if vim.g.vscode then
+    -- vscode-neovim provides its own clipboard provider
+    vim.opt.clipboard = "unnamedplus"
+else
+    -- OSC 52: yank copies to host clipboard via terminal escape sequence.
+    -- Works over SSH and WSL without needing a clipboard provider.
+    vim.api.nvim_create_autocmd("TextYankPost", {
+        group = vim.api.nvim_create_augroup("osc52_yank", { clear = true }),
+        callback = function()
+            if vim.v.event.regname == "" or vim.v.event.regname == "+" then
+                require("vim.ui.clipboard.osc52").copy("+")(vim.v.event.regcontents)
+            end
+        end,
+    })
+end
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.opt.expandtab = true

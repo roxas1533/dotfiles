@@ -2,7 +2,7 @@ return {
     {
         "nvim-neo-tree/neo-tree.nvim",
         branch = "v3.x",
-        enabled = not vim.g.vscode,
+        enabled = false,
         cmd = "Neotree",
         dependencies = {
             "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
@@ -258,5 +258,5 @@ return {
             -- vim.cmd([[nnoremap \ :Neotree reveal<cr>]])
         end,
     },
-    vim.keymap.set("n", "<C-n>", ":Neotree filesystem reveal float toggle<CR>"),
+    -- vim.keymap.set("n", "<C-n>", ":Neotree filesystem reveal float toggle<CR>"),
 }

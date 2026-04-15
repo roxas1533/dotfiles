@@ -1,0 +1,39 @@
+name: Update Locks
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # 毎週月曜 00:00 UTC (09:00 JST)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-nix
+
+      - name: Update flake.lock
+        run: nix flake update
+
+      - name: Update lazy-lock.json
+        run: nix run .#nvim-restore
+        env:
+          DOTFILES_DIR: ${{ github.workspace }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'chore: update lock files'
+          title: 'chore: update lock files'
+          body: |
+            Automated lock file updates:
+            - `flake.lock` — `nix flake update`
+            - `lazy-lock.json` — neovim plugin restore
+          branch: chore/update-locks
+          delete-branch: true
