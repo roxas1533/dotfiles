@@ -18,7 +18,13 @@ return {
         branch = "main",
         lazy = false,
         keys = {
-            { "<C-n>", function() require("fyler").toggle({ kind = "float" }) end, desc = "Toggle Fyler (float)" },
+            {
+                "<C-n>",
+                function()
+                    require("fyler").toggle({ kind = "float" })
+                end,
+                desc = "Toggle Fyler (float)",
+            },
         },
         opts = {
             views = {
@@ -83,7 +89,8 @@ return {
                         ["ud"] = function(finder)
                             local entry = finder:cursor_node_entry()
                             if entry then
-                                local dir = entry.type == "directory" and entry.path or vim.fn.fnamemodify(entry.path, ":h")
+                                local dir = entry.type == "directory" and entry.path
+                                    or vim.fn.fnamemodify(entry.path, ":h")
                                 vim.cmd("TransferUpload " .. dir)
                             end
                         end,

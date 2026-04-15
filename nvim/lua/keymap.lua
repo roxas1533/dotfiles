@@ -56,4 +56,3 @@ local function toggle_quickfix()
 end
 
 vim.keymap.set("n", "<leader>q", toggle_quickfix, { noremap = true, silent = true })
-
