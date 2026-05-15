@@ -148,6 +148,7 @@
       # Standalone home-manager configuration for non-NixOS Linux
       homeConfigurations.ro = home-manager.lib.homeManagerConfiguration {
         pkgs = mkPkgs system;
+        extraSpecialArgs = { inherit inputs; };
         modules = homeModules (mkPkgs system) ++ [
           ./nix/modules/linux
         ];
