@@ -1,4 +1,5 @@
 {
+  inputs,
   ...
 }:
 
@@ -6,6 +7,7 @@
   imports = [
     ./packages.nix
     ./dotfiles.nix
+    inputs.nix-index-database.homeModules.nix-index
   ];
 
   home = {
@@ -22,6 +24,8 @@
       enableFishIntegration = true;
       nix-direnv.enable = true;
     };
+
+    nix-index-database.comma.enable = true;
   };
 
   # XDG directories

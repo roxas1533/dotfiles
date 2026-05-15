@@ -1,6 +1,7 @@
 return {
     "sphamba/smear-cursor.nvim",
     event = "BufRead",
+    enabled = false,
     opts = {
         smear_terminal_mode = false,
         cursor_color = "#ff4000",

@@ -10,6 +10,9 @@
 }:
 
 {
+  # Clean /tmp on boot
+  boot.tmp.cleanOnBoot = true;
+
   # Enable flakes and nix-command
   nix.settings = {
     experimental-features = [
