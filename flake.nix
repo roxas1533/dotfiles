@@ -16,6 +16,10 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    codex-cli-nix = {
+      url = "github:sadjow/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     mcp-language-server = {
       url = "github:isaacphi/mcp-language-server";
       flake = false;
@@ -32,6 +36,10 @@
       url = "github:abenz1267/walker";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -42,6 +50,7 @@
       home-manager,
       treefmt-nix,
       claude-code,
+      codex-cli-nix,
       disko,
       ...
     }@inputs:
@@ -60,6 +69,7 @@
             pkg:
             builtins.elem (nixpkgs.lib.getName pkg) [
               "claude-code"
+              "codex"
               "cloudflare-warp"
             ];
           overlays = overlays;
@@ -73,7 +83,7 @@
         ./nix/modules/home
         {
           _module.args = {
-            inherit helpers;
+            inherit helpers inputs;
             dotfilesDir = "/home/ro/dotfiles";
           };
         }

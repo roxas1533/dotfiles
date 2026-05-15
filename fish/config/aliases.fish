@@ -12,3 +12,7 @@ abbr -a rf "rm -rf"
 abbr -a cl "claude"
 abbr -a clc "claude -c"
 abbr -a clr "claude -r"
+
+abbr -a cx "codex"
+abbr -a cxc "codex resume --last"
+abbr -a cxr "codex resume"

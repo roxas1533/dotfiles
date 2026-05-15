@@ -53,6 +53,15 @@ return {
                             },
                         },
                     },
+                    indentscope = {
+                        markers = {
+                            { "├", "FylerIndentMarker" },
+                            { "└", "FylerIndentMarker" },
+                        },
+                    },
+                    icon = {
+                        directory_expanded = "",
+                    },
                     win = {
                         kinds = {
                             float = {
@@ -69,7 +78,9 @@ return {
                             local entry = finder:cursor_node_entry()
                             if entry then
                                 vim.fn.setreg("+", entry.path)
-                                vim.notify("Copied: " .. entry.path)
+                                vim.schedule(function()
+                                    vim.notify("Copied: " .. entry.path)
+                                end)
                             end
                         end,
                         ["gy"] = function(finder)
@@ -77,7 +88,9 @@ return {
                             if entry then
                                 local rel = vim.fn.fnamemodify(entry.path, ":.")
                                 vim.fn.setreg("+", rel)
-                                vim.notify("Copied: " .. rel)
+                                vim.schedule(function()
+                                    vim.notify("Copied: " .. rel)
+                                end)
                             end
                         end,
                         ["uu"] = function(finder)
