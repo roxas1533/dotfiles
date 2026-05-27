@@ -8,6 +8,7 @@
   wsl = {
     enable = true;
     defaultUser = "ro";
+    interop.register = true;
     wslConf.boot.command = ''
       ln -s /mnt/wslg/runtime-dir/wayland-0* "$XDG_RUNTIME_DIR"
     '';
@@ -16,8 +17,8 @@
   # WSL doesn't need additional user groups beyond common
   # WSL doesn't need additional packages beyond common
 
-  # Cloudflare WARP VPN
-  services.cloudflare-warp.enable = true;
+  # Enable systemd-networkd (config in /etc/systemd/network/)
+  systemd.network.enable = false;
 
   # Nix settings
   nix.settings = {

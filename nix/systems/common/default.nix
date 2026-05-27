@@ -59,9 +59,7 @@
   nixpkgs.config.allowUnfreePredicate =
     pkg:
     builtins.elem (pkgs.lib.getName pkg) [
-      "gh-copilot"
       "claude-code"
-      "cloudflare-warp"
     ];
 
   # Core system packages (minimal set needed on all platforms)

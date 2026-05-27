@@ -6,7 +6,7 @@
     deno
     gcc
     gnumake
-    rustup
+#    rustup
     glibc.static
     sqlit-tui
 
