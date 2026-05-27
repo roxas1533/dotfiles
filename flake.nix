@@ -70,7 +70,6 @@
             builtins.elem (nixpkgs.lib.getName pkg) [
               "claude-code"
               "codex"
-              "cloudflare-warp"
             ];
           overlays = overlays;
         };
