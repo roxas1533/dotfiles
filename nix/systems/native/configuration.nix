@@ -48,7 +48,14 @@ in
   fileSystems."/mnt/d" = {
     device = "/dev/disk/by-uuid/4CCAAEEACAAED00E";
     fsType = "ntfs-3g";
-    options = [ "rw" "uid=1000" "gid=100" "dmask=022" "fmask=033" "nofail" ];
+    options = [
+      "rw"
+      "uid=1000"
+      "gid=100"
+      "dmask=022"
+      "fmask=033"
+      "nofail"
+    ];
   };
 
   # Bluetooth (use USB dongle hci1, disable onboard hci0)

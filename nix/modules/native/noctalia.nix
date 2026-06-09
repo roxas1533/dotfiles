@@ -9,9 +9,11 @@ let
   };
 
   # Patch noctalia to use WlrLayer.Bottom so floating windows render above the bar
-  noctalia-patched = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-    patches = (old.patches or [ ]) ++ [ ../../patches/noctalia-layer-bottom.patch ];
-  });
+  noctalia-patched =
+    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
+      (old: {
+        patches = (old.patches or [ ]) ++ [ ../../patches/noctalia-layer-bottom.patch ];
+      });
 in
 {
   imports = [
