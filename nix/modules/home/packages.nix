@@ -22,6 +22,7 @@
     yazi
     jq
     chafa
+    ouch
     python313Packages.markitdown
 
     # Languages & Runtimes

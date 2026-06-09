@@ -20,8 +20,24 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    walker = {
-      url = "github:abenz1267/walker";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+      inputs.hyprland.follows = "hyprland";
+    };
+    hyprexpo-fork = {
+      url = "github:sandwichfarm/hyprexpo";
+      flake = false;
+    };
+    wezterm = {
+      url = "github:roxas1533/wezterm-custom/main?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -86,6 +102,8 @@
             (if isWSL then nixos-wsl.nixosModules.default else { })
             # Import disko module only for native (physical machine)
             (if isWSL then { } else disko.nixosModules.disko)
+            # Import Hyprland NixOS module for native
+            (if isWSL then { } else inputs.hyprland.nixosModules.default)
             ./nix/systems/common
             # Import platform-specific configuration
             (if isWSL then ./nix/systems/wsl/configuration.nix else ./nix/systems/native/configuration.nix)
@@ -188,7 +206,17 @@
             type = "app";
             program = toString (
               pkgs.writeShellScript "switch-native" ''
-                exec sudo nixos-rebuild switch --flake ${self}#nixos-native "$@"
+                sudo nixos-rebuild switch --flake ${self}#nixos-native "$@" || exit $?
+                booted_kernel=$(readlink /run/booted-system/kernel)
+                current_kernel=$(readlink /run/current-system/kernel)
+                booted_modules=$(readlink /run/booted-system/kernel-modules)
+                current_modules=$(readlink /run/current-system/kernel-modules)
+                if [ "$booted_kernel" != "$current_kernel" ] || [ "$booted_modules" != "$current_modules" ]; then
+                  msg="カーネルまたはカーネルモジュールが更新されました。再起動してください。"
+                  echo ""
+                  echo "$msg"
+                  ${pkgs.libnotify}/bin/notify-send -u critical "再起動が必要です" "$msg"
+                fi
               ''
             );
           };

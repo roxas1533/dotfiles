@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   # Wayland/Hyprland全体のカーソル設定
@@ -38,8 +38,11 @@
       gtk-application-prefer-dark-theme = true;
     };
 
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
+    gtk4 = {
+      theme = config.gtk.theme;
+      extraConfig = {
+        gtk-application-prefer-dark-theme = true;
+      };
     };
   };
 
@@ -76,21 +79,60 @@
 
     # Theme (Fluent dark with blur)
     Theme=FluentDark
+    UseDarkTheme=True
   '';
 
-  # fcitx5キーバインド設定（常時ON、Mozc内で日本語/Direct切替）
+  # fcitx5キーバインド設定（常時ON、全角半角で切替）
   xdg.configFile."fcitx5/config".text = ''
     [Hotkey]
-    TriggerKeys=Zenkakuhankaku
     EnumerateWithTriggerKeys=True
+    EnumerateSkipFirst=False
+
+    [Hotkey/TriggerKeys]
+    0=Zenkaku_Hankaku
+
+    [Hotkey/AltTriggerKeys]
 
     [Hotkey/ActivateKeys]
 
     [Hotkey/DeactivateKeys]
 
+    [Hotkey/EnumerateForwardKeys]
+
+    [Hotkey/EnumerateBackwardKeys]
+
+    [Hotkey/EnumerateGroupForwardKeys]
+
+    [Hotkey/EnumerateGroupBackwardKeys]
+
+    [Hotkey/PrevPage]
+    0=Up
+
+    [Hotkey/NextPage]
+    0=Down
+
+    [Hotkey/PrevCandidate]
+    0=Shift+Tab
+
+    [Hotkey/NextCandidate]
+    0=Tab
+
+    [Hotkey/TogglePreedit]
+
     [Behavior]
     ActiveByDefault=True
     ShareInputState=No
+    PreeditEnabledByDefault=True
+    ShowInputMethodInformation=True
+    showInputMethodInformationWhenFocusIn=False
+    CompactInputMethodInformation=True
+    ShowFirstInputMethodInformation=True
+    DefaultPage=0
+    OverrideXkbOption=False
+    PreloadInputMethod=True
+    AllowInputMethodForPassword=False
+    ShowPreeditForPassword=False
+    AutoSavePeriod=30
   '';
 
   # mozc設定

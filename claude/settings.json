@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "printf '\\e]9;完了しました。\\e\\\\' > /dev/tty"
+            "command": "if grep -qi microsoft /proc/version 2>/dev/null; then printf '\\e]9;完了しました。\\e\\\\' > /dev/tty; else notify-send '完了しました。'; fi"
           }
         ]
       }
@@ -17,14 +17,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "printf '\\e]9;許可を求めています。\\e\\\\' > /dev/tty"
+            "command": "if grep -qi microsoft /proc/version 2>/dev/null; then printf '\\e]9;許可を求めています。\\e\\\\' > /dev/tty; else notify-send '許可を求めています。'; fi"
           }
         ]
       }
     ]
   },
-  "alwaysThinkingEnabled": true,
   "enabledPlugins": {
-    "lua-lsp@claude-plugins-official": true
-  }
+    "lua-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true
 }

@@ -3,6 +3,7 @@
 
 {
   pkgs,
+  config,
   ...
 }:
 
@@ -10,27 +11,42 @@
   imports = [
     ./desktop.nix
     ./hyprland.nix
-    ./walker.nix
+    ./noctalia.nix
   ];
 
   # Add custom scripts to PATH
   home.sessionPath = [ "$HOME/dotfiles/.bin" ];
 
+  home.sessionVariables = {
+    GST_PLUGIN_SYSTEM_PATH_1_0 = "/etc/profiles/per-user/${config.home.username}/lib/gstreamer-1.0";
+  };
+
   # Native-specific home-manager configuration
   home.packages = with pkgs; [
     # Add native-specific user packages if needed
-    hyprpaper # Wallpaper daemon
     discord
-    vivaldi
+    (vivaldi.override {
+      commandLineArgs = [
+        "--ignore-gpu-blocklist"
+        "--enable-features=VaapiVideoEncoder"
+      ];
+    })
     wezterm
     nautilus
     remmina # RDP client with GUI
     clapper
+    gst_all_1.gstreamer
+    gst_all_1.gst-plugins-base
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-plugins-bad
+    gst_all_1.gst-libav
+    mission-center
+    libnotify
+    grim
+    slurp
+    loupe
 
-    # Notification daemon (started via exec-once)
-    swaynotificationcenter
-
-    # Audio/Bluetooth settings apps (for Ashell Settings panel)
+    # Audio/Bluetooth settings apps
     pavucontrol
     blueman
 
@@ -41,27 +57,30 @@
     hackgen-nf-font
   ];
 
-  # SwayNC - Notification daemon config (started via exec-once in hyprland.nix)
-  xdg.configFile."swaync/config.json".text = builtins.toJSON {
-    positionX = "right";
-    positionY = "top";
-    timeout = 10;
-    timeout-low = 5;
-    timeout-critical = 10; # Critical通知も10秒で消える
-    notification-grouping = true;
+  # デフォルトの画像ビューアーをimvに設定
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "image/png" = "org.gnome.Loupe.desktop";
+      "image/jpeg" = "org.gnome.Loupe.desktop";
+      "image/gif" = "org.gnome.Loupe.desktop";
+      "image/webp" = "org.gnome.Loupe.desktop";
+      "image/bmp" = "org.gnome.Loupe.desktop";
+      "image/tiff" = "org.gnome.Loupe.desktop";
+      "image/svg+xml" = "org.gnome.Loupe.desktop";
+      # Archive formats — open with xarchiver for preview
+      "application/zip" = "xarchiver.desktop";
+      "application/x-tar" = "xarchiver.desktop";
+      "application/gzip" = "xarchiver.desktop";
+      "application/x-bzip2" = "xarchiver.desktop";
+      "application/x-xz" = "xarchiver.desktop";
+      "application/x-7z-compressed" = "xarchiver.desktop";
+      "application/x-rar" = "xarchiver.desktop";
+    };
   };
 
-  # Ashell bar configuration (config managed via symlink in dotfiles/ashell/)
-  programs.ashell = {
-    enable = true;
-    systemd.enable = true; # systemdサービスとして起動
-  };
-
-  # SwayOSD - Volume/Brightness OSD indicator
-  services.swayosd = {
-    enable = true;
-    topMargin = 0.9; # 画面下部に表示
-  };
+  # Disable gvfsd-wsdd (WS-Discovery) to avoid timeout on Nautilus startup
+  xdg.dataFile."gvfs/mounts/wsdd.mount".text = "";
 
   # Font configuration
   fonts.fontconfig.enable = true;
