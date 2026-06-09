@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      nix: ${{ steps.filter.outputs.nix }}
+      nvim: ${{ steps.filter.outputs.nvim }}
+      fish: ${{ steps.filter.outputs.fish }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            nix:
+              - 'flake.nix'
+              - 'flake.lock'
+              - 'nix/**'
+              - 'configuration.nix'
+              - 'treefmt.toml'
+              - '.github/actions/setup-nix/**'
+            nvim:
+              - 'nvim/**'
+              - 'flake.nix'
+            fish:
+              - 'fish/**'
+
+  nix-build:
+    needs: changes
+    if: needs.changes.outputs.nix == 'true'
+    uses: ./.github/workflows/nix-build.yaml
+
+  nix-flake:
+    needs: changes
+    if: needs.changes.outputs.nix == 'true'
+    uses: ./.github/workflows/nix-flake.yaml
+
+  nix-format:
+    needs: changes
+    if: needs.changes.outputs.nix == 'true'
+    uses: ./.github/workflows/nix-format.yaml
+
+  nix-neovim:
+    needs: changes
+    if: needs.changes.outputs.nvim == 'true'
+    uses: ./.github/workflows/nix-neovim.yaml
+
+  fish:
+    needs: changes
+    if: needs.changes.outputs.fish == 'true'
+    uses: ./.github/workflows/fish.yaml
+
+  ci-status:
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs:
+      - changes
+      - nix-build
+      - nix-flake
+      - nix-format
+      - nix-neovim
+      - fish
+    if: always()
+    steps:
+      - name: Check CI status
+        run: |
+          check() { [ "$1" != "true" ] || [ "$2" = "success" ]; }
+
+          check "${{ needs.changes.outputs.nix }}" "${{ needs.nix-build.result }}" &&
+          check "${{ needs.changes.outputs.nix }}" "${{ needs.nix-flake.result }}" &&
+          check "${{ needs.changes.outputs.nix }}" "${{ needs.nix-format.result }}" &&
+          check "${{ needs.changes.outputs.nvim }}" "${{ needs.nix-neovim.result }}" &&
+          check "${{ needs.changes.outputs.fish }}" "${{ needs.fish.result }}" &&
+          echo "CI passed" || { echo "CI failed"; exit 1; }

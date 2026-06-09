@@ -1,0 +1,27 @@
+diff --git a/Modules/MainScreen/MainScreen.qml b/Modules/MainScreen/MainScreen.qml
+index 1111111..2222222 100644
+--- a/Modules/MainScreen/MainScreen.qml
++++ b/Modules/MainScreen/MainScreen.qml
+@@ -43,7 +43,7 @@
+     Logger.d("MainScreen", "Initialized for screen:", screen?.name, "- Dimensions:", screen?.width, "x", screen?.height, "- Position:", screen?.x, ",", screen?.y);
+   }
+
+-  WlrLayershell.layer: WlrLayer.Top
++  WlrLayershell.layer: isPanelOpen ? WlrLayer.Top : WlrLayer.Bottom
+   WlrLayershell.namespace: "noctalia-background-" + (screen?.name || "unknown")
+   WlrLayershell.exclusionMode: ExclusionMode.Ignore // Don't reserve space - BarExclusionZone handles that
+   WlrLayershell.keyboardFocus: {
+diff --git a/Modules/MainScreen/BarContentWindow.qml b/Modules/MainScreen/BarContentWindow.qml
+index 1111111..2222222 100644
+--- a/Modules/MainScreen/BarContentWindow.qml
++++ b/Modules/MainScreen/BarContentWindow.qml
+@@ -33,7 +33,8 @@
+
+   // Wayland layer configuration
+   WlrLayershell.namespace: "noctalia-bar-content-" + (barWindow.screen?.name || "unknown")
+-  WlrLayershell.layer: WlrLayer.Top
++  property bool isPanelOpen: (PanelService.openedPanel !== null) && (PanelService.openedPanel.screen === barWindow.screen)
++  WlrLayershell.layer: isPanelOpen ? WlrLayer.Overlay : WlrLayer.Bottom
+   WlrLayershell.exclusionMode: ExclusionMode.Ignore // Don't reserve space - BarExclusionZone in MainScreen handles that
+
+   // Position and size to match bar location (per-screen)

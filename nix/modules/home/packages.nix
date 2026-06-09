@@ -22,6 +22,7 @@
     yazi
     jq
     chafa
+    ouch
     python313Packages.markitdown
 
     # Languages & Runtimes
@@ -35,7 +36,7 @@
     biome
     typos-lsp
     nil # Nix LSP
-    nixfmt-rfc-style
+    nixfmt
 
     # AI & CLI Tools
     claude-code
@@ -44,7 +45,6 @@
     # Infrastructure & Services
     docker
     cloudflared
-    redsocks
     sshpass
 
     # Fish Shell Plugins

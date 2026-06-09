@@ -1,35 +1,25 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 let
-  wallpaper = pkgs.fetchurl {
-    url = "https://r2.ro15.dev/wallpaper/atri_sora.jpg";
-    sha256 = "sha256-NbaeV7SN12JaIXM0y2lCUNA6j5U30rA8mWI0w8Gt5J0=";
-  };
+  screenshot = pkgs.writeShellScript "screenshot" ''
+    ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp -b '#00000080' -s '#00000000')" - | ${pkgs.wl-clipboard}/bin/wl-copy
+  '';
 in
 {
-  # Hyprpaper wallpaper configuration
-  xdg.configFile."hypr/hyprpaper.conf".text = ''
-    preload = ${wallpaper}
-    wallpaper = ,${wallpaper}
-    splash = false
-  '';
-
   wayland.windowManager.hyprland = {
     enable = true;
 
-    # プラグイン（自動ロード）
-    # TODO: hyprexpo disabled due to version mismatch (0.52.0 vs Hyprland 0.52.2)
-    # Re-enable when nixpkgs updates hyprexpo
-    # plugins = with pkgs.hyprlandPlugins; [
-    #   hyprexpo
-    # ];
+    # hyprexpo: sandwichfarm fork (upstream dropped it in hyprland-plugins#663, 2026-05-12).
+    # Built via nix/overlays/hyprexpo.nix.
+    plugins = [
+      pkgs.hyprlandPlugins.hyprexpo
+    ];
 
-    # Hyprland設定（hyprland.confの内容をNix式に変換）
     settings = {
       # Monitor configuration
-      # DP-3 (BenQ) on left, HDMI-A-1 (HP) on right (primary)
+      # DP-1 (BenQ) on left, HDMI-A-2 (HP) on right (primary)
       monitor = [
-        "DP-3,1920x1080@60,-1920x0,1"
-        "HDMI-A-1,1920x1080@60,0x0,1"
+        "DP-1,1920x1080@60,-1920x0,1"
+        "HDMI-A-2,1920x1080@60,0x0,1"
       ];
 
       # Environment variables
@@ -46,28 +36,28 @@ in
 
       # Programs
       "$terminal" = "wezterm";
-      "$fileManager" = "nautilus";
-      "$menu" = "walker";
+      "$fileManager" = "thunar";
+      "$menu" = "noctalia-shell ipc call launcher toggle";
       "$mainMod" = "SUPER";
 
       # Autostart
       exec-once = [
-        "hyprpaper"
-        "hyprpanel"
-        "fcitx5"
-        "walker --gapplication-service"
+        "noctalia-shell"
+
+        # Line In: set input source and connect to HDMI output
+        "amixer -c Generic_1 sset 'Input Source' 'Line' && amixer -c Generic_1 sset 'Capture' 50% cap && amixer -c Generic_1 sset 'Line Boost' 0% && pw-link alsa_input.pci-0000_0d_00.6.analog-stereo:capture_FL alsa_output.pci-0000_01_00.1.hdmi-stereo:playback_FL && pw-link alsa_input.pci-0000_0d_00.6.analog-stereo:capture_FR alsa_output.pci-0000_01_00.1.hdmi-stereo:playback_FR"
       ];
 
       # General settings
       general = {
         gaps_in = 5;
-        gaps_out = 20;
+        gaps_out = 5;
         border_size = 2;
         "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
         "col.inactive_border" = "rgba(595959aa)";
         resize_on_border = false;
         allow_tearing = false;
-        layout = "dwindle";
+        layout = "scrolling";
 
         # Floating window snap settings
         snap = {
@@ -138,7 +128,6 @@ in
 
       # Dwindle layout
       dwindle = {
-        pseudotile = true;
         preserve_split = true;
       };
 
@@ -182,10 +171,15 @@ in
         "$mainMod, G, togglefloating"
         "$mainMod, R, exec, $menu"
         "$mainMod, P, pin"
-        "$mainMod, J, togglesplit"
+        "$mainMod, J, layoutmsg, togglesplit"
 
-        # hyprexpo (disabled - version mismatch)
-        # "$mainMod, TAB, hyprexpo:expo, toggle"
+        "$mainMod, TAB, hyprexpo:expo, toggle"
+
+        # Screenshot (grim + slurp)
+        "$mainMod SHIFT, S, exec, ${screenshot}"
+
+        # System monitor
+        "CTRL SHIFT, Escape, exec, missioncenter"
 
         # Move focus
         "$mainMod, left, movefocus, l"
@@ -224,6 +218,18 @@ in
         # Scroll workspaces
         "$mainMod, mouse_down, workspace, e+1"
         "$mainMod, mouse_up, workspace, e-1"
+
+        # Scrolling layout: swap columns
+        "$mainMod SHIFT, left, layoutmsg, swapcol l"
+        "$mainMod SHIFT, right, layoutmsg, swapcol r"
+
+        # Scrolling layout: scroll view with mouse wheel
+        "$mainMod SHIFT, mouse_down, layoutmsg, move -col"
+        "$mainMod SHIFT, mouse_up, layoutmsg, move +col"
+
+        # Scrolling layout: scroll view with horizontal mouse wheel
+        "$mainMod, mouse_right, layoutmsg, move -col"
+        "$mainMod, mouse_left, layoutmsg, move +col"
       ];
 
       # Mouse bindings
@@ -232,14 +238,14 @@ in
         "$mainMod, mouse:273, resizewindow"
       ];
 
-      # Volume/brightness bindings
+      # Volume/brightness bindings (Noctalia provides OSD overlay)
       bindel = [
-        ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
         ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
         ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
         ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-        ", XF86MonBrightnessUp, exec, brightnessctl -e4 -n2 set 5%+"
-        ", XF86MonBrightnessDown, exec, brightnessctl -e4 -n2 set 5%-"
+        ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
+        ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
       ];
 
       # Media bindings
@@ -250,52 +256,59 @@ in
         ", XF86AudioPrev, exec, playerctl previous"
       ];
 
-      # Layer rules
       layerrule = [
-        "blur, bar-.*"
-        "ignorezero, bar-.*"
-        "blur, notifications-window"
-        "ignorezero, notifications-window"
-        "blur, indicator"
-        "ignorezero, indicator"
-        "blur, notificationsmenu"
-        "ignorezero, notificationsmenu"
-        "blur, dashboardmenu"
-        "ignorezero, dashboardmenu"
-        "blur, calendarmenu"
-        "ignorezero, calendarmenu"
-        "blur, fcitx"
-        "ignorezero, fcitx"
-        "blur, walker"
-        "ignorezero, walker"
+        # Noctalia shell
+        "blur on, match:namespace noctalia-background-.*$"
+        "blur on, match:namespace noctalia-bar-content-.*$"
+        "ignore_alpha 0.3, match:namespace noctalia-background-.*$"
+        "ignore_alpha 0.3, match:namespace noctalia-bar-content-.*$"
+        # Input methods
+        "blur on, match:namespace fcitx"
       ];
 
-      # Window rules
-      windowrulev2 = [
-        "opacity 0.7 0.7, class:^(org.gnome.Nautilus)$"
-        # Pinned window styling (orange border for both active and inactive)
-        "bordercolor rgb(ff9500) rgb(cc7700), pinned:1"
-      ];
-
+      # Window rules (0.53+ syntax)
       windowrule = [
-        "suppressevent maximize, class:.*"
-        "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+        "opacity 0.7 0.7, match:class ^(org.gnome.Nautilus|thunar)$"
+        "border_color rgb(ff9500) rgb(cc7700), match:pin 1"
+        "no_focus on, match:class ^$, match:title ^$, match:xwayland 1, match:float 1, match:fullscreen 0, match:pin 0"
+        # Picture-in-Picture
+        "keep_aspect_ratio on, match:title ^(ピクチャーインピクチャー|Picture.in.[Pp]icture)$"
+        "size 960 540, match:title ^(ピクチャーインピクチャー|Picture.in.[Pp]icture)$"
+        # Thunar rename dialog
+        "float on, match:class ^(thunar)$, match:title .+の名前を変更$"
+        # Remmina RDP connection window
+        "float on, match:class ^(org.remmina.Remmina)$, match:title ^main$"
+        "size 3840 1080, match:class ^(org.remmina.Remmina)$, match:title ^main$"
+        "workspace special:magic, match:class ^(org.remmina.Remmina)$, match:title ^main$"
       ];
 
-      # Plugin settings (hyprexpo disabled - version mismatch)
-      # plugin = {
-      #   hyprexpo = {
-      #     columns = 3;
-      #     gap_size = 5;
-      #     bg_col = "rgb(111111)";
-      #     workspace_method = "center current";
-      #     enable_gesture = true;
-      #     gesture_fingers = 3;
-      #     gesture_distance = 300;
-      #     gesture_positive = true;
-      #   };
-      # };
+      plugin = {
+        hyprexpo = {
+          columns = 3;
+          gaps_in = 5;
+          bg_col = "rgb(111111)";
+          workspace_method = "center current";
+          gesture_distance = 300;
+        };
+      };
     };
+  };
+
+  # Clean up thumbnail cache: remove thumbnails not accessed in 30 days (weekly)
+  systemd.user.services.thumbnail-cleanup = {
+    Unit.Description = "Remove unused thumbnail cache files";
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.findutils}/bin/find %h/.cache/thumbnails -type f -atime +30 -delete";
+    };
+  };
+  systemd.user.timers.thumbnail-cleanup = {
+    Unit.Description = "Weekly thumbnail cache cleanup";
+    Timer = {
+      OnCalendar = "weekly";
+      Persistent = true;
+    };
+    Install.WantedBy = [ "timers.target" ];
   };
 
   # EasyEffects with DeepFilterNet for noise suppression

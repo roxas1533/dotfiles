@@ -6,12 +6,8 @@ on:
       - 'nvim/**'
       - 'flake.nix'
       - '.github/workflows/nix-neovim.yaml'
-  pull_request:
+  workflow_call:
   workflow_dispatch:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   neovim-check:
