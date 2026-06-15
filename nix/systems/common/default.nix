@@ -43,7 +43,7 @@
   users.users.ro = {
     isNormalUser = true;
     home = "/home/ro";
-    description = "Default my user";
+    description = "Ro";
     extraGroups = [
       "wheel"
       "docker"
