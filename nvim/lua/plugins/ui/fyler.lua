@@ -21,90 +21,87 @@ return {
             {
                 "<C-n>",
                 function()
-                    require("fyler").toggle({ kind = "float" })
+                    require("fyler").toggle({ kind = "floating" })
                 end,
-                desc = "Toggle Fyler (float)",
+                desc = "Toggle Fyler (floating)",
             },
         },
         opts = {
-            views = {
-                finder = {
-                    columns = {
-                        git = {
-                            enabled = true,
-                            symbols = {
-                                Untracked = "U",
-                                Added = "A",
-                                Modified = "M",
-                                Deleted = "D",
-                                Renamed = "R",
-                                Copied = "C",
-                                Conflict = "!",
-                                Ignored = "#",
-                            },
-                        },
-                        diagnostic = {
-                            enabled = true,
-                            symbols = {
-                                Error = "",
-                                Warn = "",
-                                Info = "",
-                                Hint = "󰌵",
-                            },
-                        },
+            integrations = {
+                icon = "mini_icons",
+            },
+            extensions = {
+                git = {
+                    enabled = true,
+                    inline = false,
+                    icons = {
+                        ["??"] = { icon = "U", hl = "FylerGitUntracked" },
+                        ["A "] = { icon = "A", hl = "FylerGitStaged" },
+                        ["AM"] = { icon = "A", hl = "FylerGitStaged" },
+                        [" M"] = { icon = "M", hl = "FylerGitModified" },
+                        ["M "] = { icon = "M", hl = "FylerGitStaged" },
+                        ["MM"] = { icon = "M", hl = "FylerGitStaged" },
+                        [" D"] = { icon = "D", hl = "FylerGitDeleted" },
+                        ["D "] = { icon = "D", hl = "FylerGitStaged" },
+                        ["R "] = { icon = "R", hl = "FylerGitRenamed" },
+                        ["C "] = { icon = "C", hl = "FylerGitRenamed" },
+                        ["UU"] = { icon = "!", hl = "FylerGitConflict" },
+                        ["!!"] = { icon = "#", hl = "FylerGitIgnored" },
                     },
-                    indentscope = {
-                        markers = {
-                            { "├", "FylerIndentMarker" },
-                            { "└", "FylerIndentMarker" },
-                        },
-                    },
-                    icon = {
-                        directory_expanded = "",
-                    },
-                    win = {
-                        kinds = {
-                            float = {
-                                height = "90%",
-                            },
-                        },
-                        win_opts = {
-                            cursorline = true,
-                        },
-                    },
-                    mappings = {
-                        ["<Esc>"] = "CloseView",
-                        ["gY"] = function(finder)
-                            local entry = finder:cursor_node_entry()
+                },
+            },
+            kind_presets = {
+                floating = {
+                    height = "90%",
+                },
+            },
+            win_opts = {
+                cursorline = true,
+            },
+            ui = {
+                indent_guides = true,
+            },
+            mappings = {
+                n = {
+                    ["<Esc>"] = { action = "close" },
+                    ["gY"] = {
+                        action = function(finder)
+                            local entry = require("fyler.finder").parse_cursor_line(finder)
                             if entry then
-                                vim.fn.setreg("+", entry.path)
+                                vim.fn.setreg("+", entry.full_path)
                                 vim.schedule(function()
-                                    vim.notify("Copied: " .. entry.path)
+                                    vim.notify("Copied: " .. entry.full_path)
                                 end)
                             end
                         end,
-                        ["gy"] = function(finder)
-                            local entry = finder:cursor_node_entry()
+                    },
+                    ["gy"] = {
+                        action = function(finder)
+                            local entry = require("fyler.finder").parse_cursor_line(finder)
                             if entry then
-                                local rel = vim.fn.fnamemodify(entry.path, ":.")
+                                local rel = vim.fn.fnamemodify(entry.full_path, ":.")
                                 vim.fn.setreg("+", rel)
                                 vim.schedule(function()
                                     vim.notify("Copied: " .. rel)
                                 end)
                             end
                         end,
-                        ["uu"] = function(finder)
-                            local entry = finder:cursor_node_entry()
+                    },
+                    ["uu"] = {
+                        action = function(finder)
+                            local entry = require("fyler.finder").parse_cursor_line(finder)
                             if entry then
-                                vim.cmd("TransferUpload " .. entry.path)
+                                vim.cmd("TransferUpload " .. vim.fn.fnameescape(entry.full_path))
                             end
                         end,
-                        ["ud"] = function(finder)
-                            local entry = finder:cursor_node_entry()
+                    },
+                    ["ud"] = {
+                        action = function(finder)
+                            local entry = require("fyler.finder").parse_cursor_line(finder)
                             if entry then
-                                local dir = entry.type == "directory" and entry.path
-                                    or vim.fn.fnamemodify(entry.path, ":h")
-                                vim.cmd("TransferUpload " .. dir)
+                                local dir = entry.type == "directory" and entry.full_path
+                                    or vim.fn.fnamemodify(entry.full_path, ":h")
+                                vim.cmd("TransferUpload " .. vim.fn.fnameescape(dir))
                             end
                         end,
                     },
