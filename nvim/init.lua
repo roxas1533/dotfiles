@@ -26,7 +26,7 @@ vim.g.maplocalleader = "\\"
 require("lazy").setup({
     spec = {
         { import = "plugins" },
-        -- { import = "plugins/dap" },
+        { import = "plugins/dap" },
         { import = "plugins/git" },
         { import = "plugins/ui" },
         { import = "plugins/treesitter" },
@@ -84,9 +84,25 @@ vim.o.cursorline = true
 vim.o.updatetime = 100
 vim.opt.scrolloff = 5
 vim.o.number = true
+vim.o.mouse = "a"
+vim.o.mousemodel = "extend"
 vim.opt.encoding = "utf-8"
 vim.opt.fileencodings = { "ucs-bom", "utf-8", "cp932", "sjis" }
 vim.o.shell = "fish"
+
+vim.keymap.set("n", "<RightMouse>", function()
+    vim.cmd([[normal! <RightMouse>]])
+    vim.ui.select({
+        "DAP: Go to Current Execution Point",
+    }, {
+        prompt = "Context menu",
+    }, function(choice)
+        if choice == "DAP: Go to Current Execution Point" then
+            require("lazy").load({ plugins = { "nvim-dap" } })
+            require("dap").focus_frame()
+        end
+    end)
+end, { silent = true })
 
 vim.diagnostic.config({
     signs = true,
