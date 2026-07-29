@@ -40,7 +40,7 @@
       });
     })
     gst_all_1.gstreamer
-    gst_all_1.gstreamer.out  # core plugins (coreelements/typefind) not installed by default in 1.28+
+    gst_all_1.gstreamer.out # core plugins (coreelements/typefind) not installed by default in 1.28+
     gst_all_1.gst-plugins-base
     gst_all_1.gst-plugins-good
     gst_all_1.gst-plugins-bad
