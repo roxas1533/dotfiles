@@ -22,7 +22,7 @@
     yazi
     jq
     chafa
-    ouch
+    ouch-rar
     python313Packages.markitdown
 
     # Languages & Runtimes

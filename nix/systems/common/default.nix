@@ -57,6 +57,7 @@
       "gh-copilot"
       "claude-code"
       "cloudflare-warp"
+      "ouch"
     ];
 
   # Core system packages (minimal set needed on all platforms)

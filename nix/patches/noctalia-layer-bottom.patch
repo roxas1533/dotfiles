@@ -1,27 +1,65 @@
-diff --git a/Modules/MainScreen/MainScreen.qml b/Modules/MainScreen/MainScreen.qml
+diff --git a/src/wayland/layer_surface.cpp b/src/wayland/layer_surface.cpp
 index 1111111..2222222 100644
---- a/Modules/MainScreen/MainScreen.qml
-+++ b/Modules/MainScreen/MainScreen.qml
-@@ -43,7 +43,7 @@
-     Logger.d("MainScreen", "Initialized for screen:", screen?.name, "- Dimensions:", screen?.width, "x", screen?.height, "- Position:", screen?.x, ",", screen?.y);
+--- a/src/wayland/layer_surface.cpp
++++ b/src/wayland/layer_surface.cpp
+@@ -42,9 +42,12 @@ LayerShellLayer layerShellLayerFromConfig(std::string_view layer) {
+   if (layer == "overlay") {
+     return LayerShellLayer::Overlay;
    }
-
--  WlrLayershell.layer: WlrLayer.Top
-+  WlrLayershell.layer: isPanelOpen ? WlrLayer.Top : WlrLayer.Bottom
-   WlrLayershell.namespace: "noctalia-background-" + (screen?.name || "unknown")
-   WlrLayershell.exclusionMode: ExclusionMode.Ignore // Don't reserve space - BarExclusionZone handles that
-   WlrLayershell.keyboardFocus: {
-diff --git a/Modules/MainScreen/BarContentWindow.qml b/Modules/MainScreen/BarContentWindow.qml
++  if (layer == "bottom") {
++    return LayerShellLayer::Bottom;
++  }
+   if (layer == "top") {
+     return LayerShellLayer::Top;
+   }
+-  kLog.warn("invalid layer-shell layer '{}'; expected top or overlay", layer);
++  kLog.warn("invalid layer-shell layer '{}'; expected top, overlay, or bottom", layer);
+   return LayerShellLayer::Top;
+ }
+diff --git a/src/config/schema/config_schema.cpp b/src/config/schema/config_schema.cpp
 index 1111111..2222222 100644
---- a/Modules/MainScreen/BarContentWindow.qml
-+++ b/Modules/MainScreen/BarContentWindow.qml
-@@ -33,7 +33,8 @@
+--- a/src/config/schema/config_schema.cpp
++++ b/src/config/schema/config_schema.cpp
+@@ -1888,12 +1888,12 @@ LayerShellLayer layerShellLayerFromConfig(std::string_view layer) {
+     Field<BarConfig> barLayerField() {
+       return custom<BarConfig>(
+           "layer",
+           [](const toml::table& tbl, BarConfig& out, std::string_view parentPath, Diagnostics& diag) {
+             if (auto v = tbl["layer"].value<std::string>()) {
+-              if (*v == "top" || *v == "overlay") {
++              if (*v == "top" || *v == "overlay" || *v == "bottom") {
+                 out.layer = *v;
+               } else {
+-                diag.warn(joinPath(parentPath, "layer"), "expected top or overlay, got \"" + *v + "\"");
++                diag.warn(joinPath(parentPath, "layer"), "expected top, overlay, or bottom, got \"" + *v + "\"");
+               }
+             }
+           },
+@@ -2010,10 +2010,10 @@ LayerShellLayer layerShellLayerFromConfig(std::string_view layer) {
+             "layer",
+             [](const toml::table& tbl, BarMonitorOverride& out, std::string_view parentPath, Diagnostics& diag) {
+               if (auto v = tbl["layer"].value<std::string>()) {
+-                if (*v == "top" || *v == "overlay") {
++                if (*v == "top" || *v == "overlay" || *v == "bottom") {
+                   out.layer = *v;
+                 } else {
+-                  diag.warn(joinPath(parentPath, "layer"), "expected top or overlay, got \"" + *v + "\"");
++                  diag.warn(joinPath(parentPath, "layer"), "expected top, overlay, or bottom, got \"" + *v + "\"");
+                 }
+               }
+             },
+diff --git a/src/shell/panel/panel_manager.cpp b/src/shell/panel/panel_manager.cpp
+index 1111111..2222222 100644
+--- a/src/shell/panel/panel_manager.cpp
++++ b/src/shell/panel/panel_manager.cpp
+@@ -726,7 +726,9 @@ LayerShellLayer layerShellLayerFromConfig(std::string_view layer) {
+       && outputWidth > 0
+       && outputHeight > 0;
+   const LayerShellLayer panelLayer =
+-      useAttachedPlacement ? layerShellLayerFromConfig(barConfig.layer) : m_activePanel->layer();
++      useAttachedPlacement
++          ? std::max(LayerShellLayer::Top, layerShellLayerFromConfig(barConfig.layer))
++          : m_activePanel->layer();
 
-   // Wayland layer configuration
-   WlrLayershell.namespace: "noctalia-bar-content-" + (barWindow.screen?.name || "unknown")
--  WlrLayershell.layer: WlrLayer.Top
-+  property bool isPanelOpen: (PanelService.openedPanel !== null) && (PanelService.openedPanel.screen === barWindow.screen)
-+  WlrLayershell.layer: isPanelOpen ? WlrLayer.Overlay : WlrLayer.Bottom
-   WlrLayershell.exclusionMode: ExclusionMode.Ignore // Don't reserve space - BarExclusionZone in MainScreen handles that
-
-   // Position and size to match bar location (per-screen)
+   // Map shields BEFORE the panel surface is created or committed.
+   // Within a single layer, wlroots stacks surfaces by mapping order.
