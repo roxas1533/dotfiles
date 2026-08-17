@@ -60,6 +60,9 @@ return {
             },
             ui = {
                 indent_guides = true,
+                hidden_items = {
+                    switches = vim.empty_dict(),
+                },
             },
             mappings = {
                 n = {
