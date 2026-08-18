@@ -10,5 +10,6 @@
   # Currently minimal, can be expanded with WSL-specific needs
 
   home.packages = with pkgs; [
+    tea
   ];
 }

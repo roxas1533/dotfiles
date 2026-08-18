@@ -8,6 +8,14 @@ return {
             segments = {
                 { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
                 {
+                    sign = {
+                        name = { "Dap.*" },
+                        maxwidth = 1,
+                        colwidth = 1,
+                        wrap = true,
+                    },
+                },
+                {
                     sign = { maxwidth = 1, namespace = { "diagnostic.signs" } },
                     click = "v:lua.ScSa",
                 },

@@ -35,8 +35,7 @@
     # LSP & Language Servers (for Neovim)
     lua-language-server
     nil # Nix LSP
-    nixfmt-rfc-style
-
+    nixfmt
     # Infrastructure & Services
     docker
   ];

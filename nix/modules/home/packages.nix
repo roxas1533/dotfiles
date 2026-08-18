@@ -6,7 +6,7 @@
     deno
     gcc
     gnumake
-    rustup
+    #    rustup
     glibc.static
     sqlit-tui
 
@@ -40,7 +40,12 @@
 
     # AI & CLI Tools
     claude-code
+    codex
     gemini-cli
+
+    # Bugzilla
+    bugzilla-cli
+    rclone
 
     # Infrastructure & Services
     docker

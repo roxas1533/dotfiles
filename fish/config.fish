@@ -42,6 +42,13 @@ set -x DENO_TLS_CA_STORE system
 # NixOS rebuild / home-manager switch helper
 function nrs --description "nixos-rebuild switch with WSL/native auto-detect, or home-manager for server"
     set -l flake "$HOME/dotfiles"
+    set -l native_flake "$flake#nixos-native"
+
+    if set -q NRS_NATIVE_FLAKE
+        set native_flake "$NRS_NATIVE_FLAKE"
+    else if test -f "$HOME/nixos-local/flake.nix"
+        set native_flake "$HOME/nixos-local#this"
+    end
 
     # Check for -s flag (server mode)
     if contains -- -s $argv
@@ -61,7 +68,7 @@ function nrs --description "nixos-rebuild switch with WSL/native auto-detect, or
     if test (systemd-detect-virt) = "wsl"
         nix run $flake#switch -- $argv
     else
-        nix run $flake#switch-native -- $argv
+        sudo nixos-rebuild switch --flake $native_flake $argv
     end
 end
 

@@ -10,6 +10,9 @@
 }:
 
 {
+  # Clean /tmp on boot
+  boot.tmp.cleanOnBoot = true;
+
   # Enable flakes and nix-command
   nix.settings = {
     experimental-features = [
@@ -18,6 +21,8 @@
     ];
     # SSL certificate for network access in sandboxed builds
     ssl-cert-file = "/etc/ssl/certs/ca-certificates.crt";
+    # Automatically hard-link identical files in the store
+    auto-optimise-store = true;
   };
 
   # Virtualization & Services
@@ -54,9 +59,7 @@
   nixpkgs.config.allowUnfreePredicate =
     pkg:
     builtins.elem (pkgs.lib.getName pkg) [
-      "gh-copilot"
       "claude-code"
-      "cloudflare-warp"
       "ouch"
     ];
 
