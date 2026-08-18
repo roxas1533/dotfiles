@@ -68,17 +68,17 @@ pre_action_fade_seconds = 5.0
 [idle.behavior.screen-off]
 timeout = 600
 action  = "screen_off"
-enabled = true
+enabled = false
 
 [idle.behavior.lock]
 timeout = 660
 action  = "lock"
-enabled = true
+enabled = false
 
 [idle.behavior.suspend]
 timeout = 1800
 action  = "suspend"
-enabled = true
+enabled = false
 
 # ── Bar ───────────────────────────────────────────────────────────────────────
 

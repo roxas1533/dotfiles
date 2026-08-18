@@ -82,6 +82,7 @@ in
   # Networking
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
+  networking.nftables.enable = true;
 
   # Use local time for hardware clock (for Windows dual-boot compatibility)
   time.hardwareClockInLocalTime = true;

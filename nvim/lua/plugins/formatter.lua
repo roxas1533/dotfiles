@@ -12,6 +12,8 @@ return {
                     null_ls.builtins.formatting.djlint,
                     null_ls.builtins.formatting.nixfmt,
                     null_ls.builtins.formatting.biome,
+                    null_ls.builtins.diagnostics.markdownlint_cli2,
+                    null_ls.builtins.diagnostics.textlint,
                 },
                 on_attach = function(client, bufnr)
                     if client.supports_method("textDocument/formatting") then
