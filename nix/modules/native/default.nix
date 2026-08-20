@@ -18,6 +18,9 @@
   # Native-specific home-manager configuration
   home.packages = with pkgs; [
     # Add native-specific user packages if needed
+    ffmpeg
+    libwebp # cwebp: batch image -> WebP conversion (cwebp + xargs)
+    rclone
     discord
     (vivaldi.override {
       commandLineArgs = [

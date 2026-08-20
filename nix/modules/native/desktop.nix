@@ -39,6 +39,10 @@
       gtk-application-prefer-dark-theme = true;
     };
 
+    gtk3.bookmarks = [
+      "file:///mnt/pcloud pCloud"
+    ];
+
     gtk4 = {
       theme = config.gtk.theme;
       extraConfig = {
