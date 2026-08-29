@@ -1,4 +1,9 @@
-{ pkgs, config, inputs, ... }:
+{
+  pkgs,
+  config,
+  inputs,
+  ...
+}:
 {
   wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.configType = "hyprlang";
