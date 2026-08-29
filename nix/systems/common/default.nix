@@ -60,6 +60,7 @@
     pkg:
     builtins.elem (pkgs.lib.getName pkg) [
       "claude-code"
+      "ouch"
     ];
 
   # Core system packages (minimal set needed on all platforms)

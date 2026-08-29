@@ -22,7 +22,7 @@
     yazi
     jq
     chafa
-    ouch
+    ouch-rar
     python313Packages.markitdown
 
     # Languages & Runtimes
@@ -41,7 +41,6 @@
     # AI & CLI Tools
     claude-code
     codex
-    gemini-cli
 
     # Bugzilla
     bugzilla-cli

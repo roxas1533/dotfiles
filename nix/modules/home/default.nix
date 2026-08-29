@@ -14,6 +14,7 @@
     username = "ro";
     homeDirectory = "/home/ro";
     stateVersion = "25.05";
+
   };
 
   programs = {

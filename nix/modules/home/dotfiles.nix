@@ -74,18 +74,6 @@ in
     # WezTerm configuration
     link_force "${dotfilesDir}/wezterm/wezterm.lua" "${config.home.homeDirectory}/.wezterm.lua"
 
-    # Hyprland configuration (if exists) - DEPRECATED
-    # Hyprland config is now managed by Home Manager in nix/modules/native/hyprland.nix
-    # This directory may contain other files like hyprpaper.conf in the future
-    if [ -d "${dotfilesDir}/hypr" ] && [ "$(ls -A ${dotfilesDir}/hypr 2>/dev/null | grep -v '^hyprland\.conf$')" ]; then
-      for file in "${dotfilesDir}/hypr"/*; do
-        filename=$(basename "$file")
-        if [[ "$filename" != "hyprland.conf" ]]; then
-          link_force "$file" "${configHome}/hypr/$filename"
-        fi
-      done
-    fi
-
     echo ""
     echo "✓ Dotfiles のシンボリックリンクを作成しました"
     echo ""
