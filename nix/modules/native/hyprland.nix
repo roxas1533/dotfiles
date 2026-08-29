@@ -1,6 +1,15 @@
-{ pkgs, inputs, ... }:
+{ pkgs, config, inputs, ... }:
 {
   wayland.windowManager.hyprland.enable = true;
+  wayland.windowManager.hyprland.configType = "hyprlang";
+  # Suppress "no config provided" warning — config is managed via home.file symlinks
+  wayland.windowManager.hyprland.extraConfig = "";
+
+  # hyprland.lua is linked here (not in the activation script) so it exists
+  # atomically with hyprland.conf during linkGeneration, preventing the "No such
+  # file or directory" warning Hyprland emits when it inotify-reloads mid-activation.
+  home.file.".config/hypr/hyprland.lua".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/hypr/hyprland.lua";
 
   # Stable symlink for hyprexpo plugin — loaded via hl.plugin() in hyprland.lua
   home.file.".config/hypr/plugins/hyprexpo.so".source =

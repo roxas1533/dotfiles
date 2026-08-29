@@ -151,7 +151,6 @@
     adwaita-qt
     adwaita-qt6
     dconf
-    gtk-engine-murrine # Fluent テーマに必要
     qt6Packages.fcitx5-configtool # fcitx5設定ツール
   ];
 }

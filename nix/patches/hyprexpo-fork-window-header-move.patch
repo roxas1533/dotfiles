@@ -1,0 +1,26 @@
+diff --git a/Dispatchers.cpp b/Dispatchers.cpp
+index 1111111..2222222 100644
+--- a/Dispatchers.cpp
++++ b/Dispatchers.cpp
+@@ -12,7 +12,7 @@
+ #include <hyprland/src/debug/log/Logger.hpp>
+ #include <hyprland/src/desktop/state/FocusState.hpp>
+ #include <hyprland/src/desktop/state/GlobalWindowController.hpp>
+-#include <hyprland/src/desktop/view/Window.hpp>
++#include <hyprland/src/desktop/view/window/Window.hpp>
+ #include <hyprland/src/helpers/Color.hpp>
+ #include <hyprland/src/output/Monitor.hpp>
+ #include <hyprland/src/managers/KeybindManager.hpp>
+diff --git a/Overview.cpp b/Overview.cpp
+index 1111111..2222222 100644
+--- a/Overview.cpp
++++ b/Overview.cpp
+@@ -14,7 +14,7 @@
+ #include <hyprland/src/config/ConfigManager.hpp>
+ #include <hyprland/src/config/shared/actions/ConfigActions.hpp>
+ #include <hyprland/src/config/shared/animation/AnimationTree.hpp>
+-#include <hyprland/src/desktop/view/Window.hpp>
++#include <hyprland/src/desktop/view/window/Window.hpp>
+ #include <hyprland/src/layout/LayoutManager.hpp>
+ #include <hyprland/src/layout/space/Space.hpp>
+ #include <hyprland/src/animation/AnimationManager.hpp>

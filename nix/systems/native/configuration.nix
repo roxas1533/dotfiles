@@ -171,7 +171,7 @@ in
 
     # File manager and utilities
     thunar
-    xfce.thunar-archive-plugin # Archive operations in Thunar context menu
+    thunar-archive-plugin # Archive operations in Thunar context menu
     tumbler # Thumbnail service for Thunar
     ffmpegthumbnailer # Video thumbnails for Tumbler
     xarchiver # Lightweight archive manager (zip preview etc.)

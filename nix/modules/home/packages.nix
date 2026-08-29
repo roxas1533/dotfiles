@@ -41,7 +41,6 @@
     # AI & CLI Tools
     claude-code
     codex
-    gemini-cli
 
     # Bugzilla
     bugzilla-cli

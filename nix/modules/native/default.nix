@@ -8,6 +8,7 @@
     ./desktop.nix
     ./hyprland.nix
     ./noctalia.nix
+    ./gaming.nix
   ];
 
   # Add custom scripts to PATH
