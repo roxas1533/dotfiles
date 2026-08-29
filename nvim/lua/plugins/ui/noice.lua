@@ -34,6 +34,9 @@ return {
         lazy = true,
         opts = {
             background_colour = "#000000",
+            on_open = function(win)
+                vim.api.nvim_win_set_config(win, { zindex = 60 })
+            end,
         },
     },
 }

@@ -6,7 +6,7 @@
     deno
     gcc
     gnumake
-    rustup
+    #    rustup
     glibc.static
     sqlit-tui
 
@@ -22,7 +22,7 @@
     yazi
     jq
     chafa
-    ouch
+    ouch-rar
     python313Packages.markitdown
 
     # Languages & Runtimes
@@ -40,7 +40,11 @@
 
     # AI & CLI Tools
     claude-code
-    gemini-cli
+    codex
+
+    # Bugzilla
+    bugzilla-cli
+    rclone
 
     # Infrastructure & Services
     docker

@@ -3,6 +3,7 @@
 {
   # Wayland/Hyprland全体のカーソル設定
   home.pointerCursor = {
+    enable = true;
     name = "Adwaita";
     package = pkgs.adwaita-icon-theme;
     size = 24;
@@ -37,6 +38,10 @@
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = true;
     };
+
+    gtk3.bookmarks = [
+      "file:///mnt/pcloud pCloud"
+    ];
 
     gtk4 = {
       theme = config.gtk.theme;
@@ -146,7 +151,6 @@
     adwaita-qt
     adwaita-qt6
     dconf
-    gtk-engine-murrine # Fluent テーマに必要
     qt6Packages.fcitx5-configtool # fcitx5設定ツール
   ];
 }

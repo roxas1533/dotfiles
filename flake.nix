@@ -12,9 +12,21 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    codex-cli-nix = {
+      url = "github:sadjow/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     mcp-language-server = {
       url = "github:isaacphi/mcp-language-server";
       flake = false;
+    };
+    cloud-bugzilla-cli = {
+      url = "github:roxas1533/cloud-bugzilla-cli";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     disko = {
       url = "github:nix-community/disko";
@@ -36,8 +48,8 @@
       url = "github:sandwichfarm/hyprexpo";
       flake = false;
     };
-    wezterm = {
-      url = "github:roxas1533/wezterm-custom/main?dir=nix";
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -49,6 +61,8 @@
       nixos-wsl,
       home-manager,
       treefmt-nix,
+      claude-code,
+      codex-cli-nix,
       disko,
       ...
     }@inputs:
@@ -67,7 +81,8 @@
             pkg:
             builtins.elem (nixpkgs.lib.getName pkg) [
               "claude-code"
-              "cloudflare-warp"
+              "codex"
+              "ouch"
             ];
           overlays = overlays;
         };
@@ -80,7 +95,7 @@
         ./nix/modules/home
         {
           _module.args = {
-            inherit helpers;
+            inherit helpers inputs;
             dotfilesDir = "/home/ro/dotfiles";
           };
         }
@@ -147,6 +162,7 @@
       # Standalone home-manager configuration for non-NixOS Linux
       homeConfigurations.ro = home-manager.lib.homeManagerConfiguration {
         pkgs = mkPkgs system;
+        extraSpecialArgs = { inherit inputs; };
         modules = homeModules (mkPkgs system) ++ [
           ./nix/modules/linux
         ];
