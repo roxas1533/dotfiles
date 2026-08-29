@@ -82,6 +82,7 @@
             builtins.elem (nixpkgs.lib.getName pkg) [
               "claude-code"
               "codex"
+              "ouch"
             ];
           overlays = overlays;
         };
