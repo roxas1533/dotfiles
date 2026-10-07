@@ -71,7 +71,10 @@ in
   # Load hid-nintendo for Pro Controller support
   boot.tmp.useTmpfs = true;
   boot.extraModulePackages = [ ];
-  boot.kernelModules = [ "hid-nintendo" "binder_linux" ];
+  boot.kernelModules = [
+    "hid-nintendo"
+    "binder_linux"
+  ];
 
   virtualisation.waydroid.enable = true;
 

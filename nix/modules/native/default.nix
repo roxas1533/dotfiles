@@ -154,7 +154,6 @@ in
     };
   };
 
-
   # Disable gvfsd-wsdd (WS-Discovery) to avoid timeout on Nautilus startup
   xdg.dataFile."gvfs/mounts/wsdd.mount".text = "";
 
@@ -164,15 +163,25 @@ in
   # PSD/PSB preview via siroio/preview-psd-clip.yazi (native only)
   programs.yazi.plugins.preview-psd-clip = preview-psd-clip;
   programs.yazi.settings.plugin.prepend_previewers = [
-    { url = "*.{psd,psb}"; run = "preview-psd-clip"; }
+    {
+      url = "*.{psd,psb}";
+      run = "preview-psd-clip";
+    }
   ];
 
   # PSD/PSB opener: xdg-open fails on Hyprland (no DE detection), use gio open.
   # Changing the app only requires updating xdg.mimeApps, not this rule.
   programs.yazi.settings.opener.psd = [
-    { run = "gio open %s"; desc = "Open"; for = "unix"; }
+    {
+      run = "gio open %s";
+      desc = "Open";
+      for = "unix";
+    }
   ];
   programs.yazi.settings.open.prepend_rules = [
-    { url = "*.{psd,psb}"; use = "psd"; }
+    {
+      url = "*.{psd,psb}";
+      use = "psd";
+    }
   ];
 }
