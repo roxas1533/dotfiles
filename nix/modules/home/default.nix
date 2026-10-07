@@ -7,6 +7,7 @@
   imports = [
     ./packages.nix
     ./dotfiles.nix
+    ./yazi.nix
     inputs.nix-index-database.homeModules.nix-index
   ];
 

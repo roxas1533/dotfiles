@@ -1,4 +1,5 @@
 {
+  "model": "opus",
   "hooks": {
     "Stop": [
       {
@@ -28,6 +29,7 @@
     "typescript-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true
   },
+  "language": "日本語",
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true
