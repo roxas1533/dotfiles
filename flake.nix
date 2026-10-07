@@ -28,6 +28,10 @@
       url = "github:roxas1533/cloud-bugzilla-cli";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    psd-viewer = {
+      url = "github:roxas1533/psd-viewer";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -44,8 +48,13 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+    # Pinned, not branch-tracked: the fork builds against Hyprland internals and pairs
+    # itself with exact compositor commits in hyprpm.toml, so an unpinned bump against
+    # a different Hyprland needs a growing pile of API-compat patches. This commit
+    # still builds against the v0.56.2 that nixpkgs ships, and carries the
+    # overview_mode option the overlay's patches rely on.
     hyprexpo-fork = {
-      url = "github:sandwichfarm/hyprexpo";
+      url = "github:sandwichfarm/hyprexpo/a54d20e433831eb9a5770e052c48736421ba7db5";
       flake = false;
     };
     nix-index-database = {

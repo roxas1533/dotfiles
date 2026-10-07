@@ -16,3 +16,6 @@ abbr -a clr "claude -r"
 abbr -a cx "codex"
 abbr -a cxc "codex resume --last"
 abbr -a cxr "codex resume"
+
+# nixos-rebuild switch with WSL/native/server auto-detect (expands in place)
+abbr -a nrs --position command --function __nrs_expand

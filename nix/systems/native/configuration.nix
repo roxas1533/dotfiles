@@ -71,7 +71,16 @@ in
   # Load hid-nintendo for Pro Controller support
   boot.tmp.useTmpfs = true;
   boot.extraModulePackages = [ ];
-  boot.kernelModules = [ "hid-nintendo" ];
+  boot.kernelModules = [
+    "hid-nintendo"
+    "binder_linux"
+  ];
+
+  virtualisation.waydroid.enable = true;
+
+  # iOS device support (libimobiledevice / ifuse)
+  services.usbmuxd.enable = true;
+
   # Disable onboard Bluetooth adapter (13d3:3571)
   # Disable SSP on USB dongle (0a12:0001) for HID gamepad bonding compatibility
   services.udev.extraRules = ''
@@ -110,12 +119,13 @@ in
     };
   };
 
-  # Enable Hyprland (from official flake, with portal)
+  # Hyprland from nixpkgs (v0.56.2), not the flake's main branch: hyprexpo pairs
+  # itself with tagged Hyprland commits, and main runs ahead of the newest pair.
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
-    package = inputs.hyprland.packages.x86_64-linux.hyprland;
-    portalPackage = inputs.hyprland.packages.x86_64-linux.xdg-desktop-portal-hyprland;
+    package = pkgs.hyprland;
+    portalPackage = pkgs.xdg-desktop-portal-hyprland;
   };
 
   # Display manager for login (auto-login to ro)
@@ -185,6 +195,7 @@ in
 
   # Thunar: enable gvfs for trash, MTP, and remote filesystems
   services.gvfs.enable = true;
+  services.udisks2.enable = true;
 
   # Additional user groups for native (adds to common)
   users.users.ro.extraGroups = [
@@ -230,9 +241,30 @@ in
   };
 
   # Fonts (native only - not needed in WSL)
-  fonts.packages = with pkgs; [
-    noto-fonts-cjk-serif
-    noto-fonts-cjk-sans
-    noto-fonts-color-emoji
-  ];
+  fonts = {
+    packages = with pkgs; [
+      noto-fonts-cjk-serif
+      noto-fonts-cjk-sans
+      noto-fonts-color-emoji
+    ];
+
+    # noto-fonts-cjk-* は JP/KR/SC/TC が1つの OTC に同梱されているため、
+    # 明示しないと CJK のフォールバックが Noto Sans CJK KR に解決され、
+    # 「社」などが中国語系字形（いわゆる中華フォント）で表示される。
+    fontconfig.defaultFonts = {
+      sansSerif = [
+        "DejaVu Sans"
+        "Noto Sans CJK JP"
+      ];
+      serif = [
+        "DejaVu Serif"
+        "Noto Serif CJK JP"
+      ];
+      monospace = [
+        "DejaVu Sans Mono"
+        "Noto Sans Mono CJK JP"
+      ];
+      emoji = [ "Noto Color Emoji" ];
+    };
+  };
 }

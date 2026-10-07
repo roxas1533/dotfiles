@@ -16,9 +16,6 @@ let
       });
 in
 {
-  imports = [
-    inputs.noctalia.homeModules.default
-  ];
 
   # Settings are managed via dotfile symlink (dotfiles/noctalia/ → ~/.config/noctalia/)
   programs.noctalia = {

@@ -29,8 +29,9 @@ hl.env("QT_STYLE_OVERRIDE", "adwaita-dark")
 ---- AUTOSTART ----
 --------------------
 
+hl.plugin.load(os.getenv("HOME") .. "/.config/hypr/plugins/hyprexpo.so")
+
 hl.on("hyprland.start", function()
-    hl.exec_cmd("hyprctl plugin load " .. os.getenv("HOME") .. "/.config/hypr/plugins/hyprexpo.so")
     hl.exec_cmd(
         "dbus-update-activation-environment --systemd DISPLAY HYPRLAND_INSTANCE_SIGNATURE WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE"
     )
@@ -103,6 +104,16 @@ hl.config({
         follow_mouse = 1,
         sensitivity = 0,
         touchpad = { natural_scroll = false },
+    },
+
+    -- Nested keys become plugin:hyprexpo:overview_mode. "grid" because layout is
+    -- "scrolling" above, and auto would then open hyprexpo's scrolling overview,
+    -- which renders workspaces squashed and ignores every pointer event -- leaving
+    -- no way to drag a window to another workspace.
+    plugin = {
+        hyprexpo = {
+            overview_mode = "grid",
+        },
     },
 })
 

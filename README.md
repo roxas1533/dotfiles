@@ -87,11 +87,7 @@ For non-NixOS servers with standalone home-manager:
 Apply changes after editing configuration:
 
 ```sh
-# NixOS (WSL/Native auto-detect)
 nrs
-
-# Server (Home Manager Standalone)
-nrs -s
 
 # Linux (Home Manager)
 home-manager switch --flake .#ro
