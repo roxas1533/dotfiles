@@ -42,8 +42,7 @@
     claude-code
     codex
 
-    # Bugzilla
-    bugzilla-cli
+    # Cloud storage
     rclone
 
     # Infrastructure & Services
