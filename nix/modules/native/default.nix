@@ -64,6 +64,7 @@ in
     ./desktop.nix
     ./hyprland.nix
     ./noctalia.nix
+    ./rbw.nix
     ./gaming.nix
   ];
 
