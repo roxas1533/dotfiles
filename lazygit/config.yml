@@ -5,9 +5,9 @@ gui:
   expandedSidePanelWeight: 15
   sidePanelWidth: 0.15
 git:
-  pagers:
+  diffRenderers:
     - colorArg: always
-      pager: delta --dark --paging=never --side-by-side
+      command: delta --dark --paging=never --side-by-side
 os:
   editPreset: nvim-remote
   edit: 'if test -n "$NVIM"; nvim --server "$NVIM" --remote-send "<C-\\><C-n>:q!<CR>:DiffviewOpen<CR>"; else; nvim -- {{filename}}; end'

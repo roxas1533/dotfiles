@@ -1,0 +1,104 @@
+# Noctalia v5 config — migrated from v4 settings.json
+
+[shell]
+avatar_path = "/home/ro/.face"
+
+[shell.animation]
+speed = 1.2
+
+[shell.panel]
+launcher_placement       = "floating"
+launcher_position        = "center"
+control_center_placement = "attached"
+session_placement        = "floating"
+session_position         = "center"
+
+# ── Theme ─────────────────────────────────────────────────────────────────────
+
+[theme]
+source  = "builtin"
+builtin = "Ayu"
+
+# ── Wallpaper ─────────────────────────────────────────────────────────────────
+
+[wallpaper]
+directory  = "~/Pictures/Wallpapers"
+fill_mode  = "crop"
+fill_color = "#000000"
+
+[wallpaper.default]
+path = "~/Pictures/Wallpapers/atri_sora.jpg"
+
+# ── Backdrop (v4: overviewBlur / overviewTint) ────────────────────────────────
+
+[backdrop]
+enabled        = true
+blur_intensity = 0.4
+tint_intensity = 0.6
+
+# ── Notifications ─────────────────────────────────────────────────────────────
+
+[notification]
+background_opacity = 0.8
+
+# ── OSD ───────────────────────────────────────────────────────────────────────
+
+[osd]
+position = "top_right"
+
+# ── Location ──────────────────────────────────────────────────────────────────
+
+[location]
+address         = "Tokyo"
+custom_schedule = true
+sunrise         = "06:30"
+sunset          = "18:30"
+
+# ── Night Light ───────────────────────────────────────────────────────────────
+
+[nightlight]
+temperature_day   = 6500
+temperature_night = 4000
+
+# ── Idle ──────────────────────────────────────────────────────────────────────
+
+[idle]
+pre_action_fade_seconds = 5.0
+
+[idle.behavior.screen-off]
+timeout = 600
+action  = "screen_off"
+enabled = false
+
+[idle.behavior.lock]
+timeout = 660
+action  = "lock"
+enabled = false
+
+[idle.behavior.suspend]
+timeout = 1800
+action  = "suspend"
+enabled = false
+
+# ── Bar ───────────────────────────────────────────────────────────────────────
+
+[bar.main]
+background_opacity = 0.93
+capsule            = false
+layer              = "bottom"
+start              = ["session", "launcher", "workspaces"]
+center             = ["media"]
+end                = ["tray", "clipboard", "network", "volume", "control-center", "clock", "notifications"]
+
+# ── Clock widget ──────────────────────────────────────────────────────────────
+
+[widget.clock]
+format = "{:%H\n%M}"
+
+# ── Dock ──────────────────────────────────────────────────────────────────────
+
+[dock]
+enabled          = true
+auto_hide        = true
+inactive_opacity = 0.6
+reserve_space    = false

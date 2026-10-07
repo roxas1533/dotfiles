@@ -82,6 +82,7 @@ in
   # Networking
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
+  networking.nftables.enable = true;
 
   # Use local time for hardware clock (for Windows dual-boot compatibility)
   time.hardwareClockInLocalTime = true;
@@ -170,7 +171,7 @@ in
 
     # File manager and utilities
     thunar
-    xfce.thunar-archive-plugin # Archive operations in Thunar context menu
+    thunar-archive-plugin # Archive operations in Thunar context menu
     tumbler # Thumbnail service for Thunar
     ffmpegthumbnailer # Video thumbnails for Tumbler
     xarchiver # Lightweight archive manager (zip preview etc.)

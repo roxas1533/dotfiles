@@ -1,0 +1,40 @@
+--- a/Dispatchers.cpp
++++ b/Dispatchers.cpp
+@@ -137,7 +137,7 @@
+     const auto& windows = Desktop::windowState()->windows();
+     for (auto it = windows.rbegin(); it != windows.rend(); ++it) {
+         const auto& window = *it;
+-        if (!window || window->m_workspace != workspace || !window->m_isMapped || window->isHidden())
++        if (!window || window->m_workspace != workspace || !window->mapped() || window->isHidden())
+             continue;
+
+         return window;
+--- a/Overview.cpp
++++ b/Overview.cpp
+@@ -462,7 +462,7 @@
+     }
+
+     for (const auto& window : Desktop::windowState()->windows()) {
+-        if (!window || !window->m_isMapped || window->isHidden() || static_cast<bool>(window->m_state & Desktop::View::WINDOW_STATE_PINNED) || !window->m_workspace || window->m_workspace->m_monitor != monitor)
++        if (!window || !window->mapped() || window->isHidden() || static_cast<bool>(window->m_state & Desktop::View::WINDOW_STATE_PINNED) || !window->m_workspace || window->m_workspace->m_monitor != monitor)
+             continue;
+
+         window->alpha()[Desktop::View::WINDOW_ALPHA_MOVE_FROM_WORKSPACE]->setValueAndWarp(1.F);
+@@ -481,7 +481,7 @@
+         return states;
+
+     for (const auto& window : Desktop::windowState()->windows()) {
+-        if (!window || !window->m_isMapped || !static_cast<bool>(window->m_state & Desktop::View::WINDOW_STATE_PINNED))
++        if (!window || !window->mapped() || !static_cast<bool>(window->m_state & Desktop::View::WINDOW_STATE_PINNED))
+             continue;
+
+         states.push_back({
+@@ -514,7 +514,7 @@
+ }
+
+ bool windowVisibleOnWorkspace(const PHLWINDOW& window, const PHLWORKSPACE& workspace) {
+-    return window && workspace && window->m_workspace == workspace && window->m_isMapped && !window->isHidden() && !static_cast<bool>(window->m_state & Desktop::View::WINDOW_STATE_PINNED);
++    return window && workspace && window->m_workspace == workspace && window->mapped() && !window->isHidden() && !static_cast<bool>(window->m_state & Desktop::View::WINDOW_STATE_PINNED);
+ }
+
+ void settleWorkspaceMoveAnimation(const PHLWINDOW& window) {

@@ -21,16 +21,11 @@ in
   ];
 
   # Settings are managed via dotfile symlink (dotfiles/noctalia/ → ~/.config/noctalia/)
-  programs.noctalia-shell = {
+  programs.noctalia = {
     enable = true;
     package = noctalia-patched;
   };
 
-  # Set wallpaper via Noctalia's wallpaper cache
-  home.file.".cache/noctalia/wallpapers.json" = {
-    text = builtins.toJSON {
-      defaultWallpaper = "${wallpaper}";
-      wallpapers = { };
-    };
-  };
+  # Expose the nix-store wallpaper at a stable home path so config.toml can reference it
+  home.file."Pictures/Wallpapers/atri_sora.jpg".source = wallpaper;
 }

@@ -48,10 +48,6 @@
       url = "github:sandwichfarm/hyprexpo";
       flake = false;
     };
-    wezterm = {
-      url = "github:roxas1533/wezterm-custom/main?dir=nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -86,6 +82,7 @@
             builtins.elem (nixpkgs.lib.getName pkg) [
               "claude-code"
               "codex"
+              "ouch"
             ];
           overlays = overlays;
         };

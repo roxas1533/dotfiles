@@ -9,7 +9,7 @@
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
-    # Use the open source kernel module (for Turing+)
+    # GB203 (RTX 5070 Ti) requires open kernel modules from driver 610+
     open = true;
 
     # Modesetting is required for Wayland
@@ -19,8 +19,7 @@
     powerManagement.enable = false;
     powerManagement.finegrained = false;
 
-    # Use the stable driver
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.latest;
 
     # Enable nvidia-settings
     nvidiaSettings = true;

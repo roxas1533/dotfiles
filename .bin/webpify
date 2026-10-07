@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# Recursively convert all images under a directory to WebP,
+# mirroring the source directory structure into a new output directory.
+# Resumable: files whose output already exists and is newer are skipped.
+set -euo pipefail
+
+usage() {
+  echo "Usage: $(basename "$0") <source_dir> [quality] [output_dir]" >&2
+  echo "  quality:    cwebp quality 0-100 (default: 80)" >&2
+  echo "  output_dir: destination directory (default: <source_dir>_webp)" >&2
+  exit 1
+}
+
+[ $# -ge 1 ] || usage
+command -v cwebp >/dev/null 2>&1 || { echo "Error: cwebp not found (libwebp not installed)" >&2; exit 1; }
+
+src=$(realpath "$1")
+[ -d "$src" ] || { echo "Error: '$1' is not a directory" >&2; exit 1; }
+
+quality="${2:-80}"
+dst=$(realpath -m "${3:-${src%/}_webp}")
+export src dst quality
+
+mkdir -p "$dst"
+
+filelist=$(mktemp)
+lockfile=$(mktemp)
+counterfile=$(mktemp)
+faillog=$(mktemp)
+trap 'rm -f "$filelist" "$lockfile" "$counterfile" "$faillog"' EXIT
+export lockfile counterfile faillog
+
+find "$src" -type f \( \
+    -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \
+    -o -iname '*.bmp' -o -iname '*.tiff' -o -iname '*.tif' \
+  \) -print0 >"$filelist"
+
+total=$(tr -dc '\0' <"$filelist" | wc -c)
+if [ "$total" -eq 0 ]; then
+  echo "No images found under: $src"
+  exit 0
+fi
+export total
+echo "Found $total image(s). Converting with $(nproc) worker(s)..."
+echo 0 >"$counterfile"
+
+xargs -0 -a "$filelist" -P "$(nproc)" -I{} bash -c '
+  file="$1"
+  rel="${file#$src/}"
+  out="$dst/${rel%.*}.webp"
+
+  if [ -e "$out" ] && [ "$out" -nt "$file" ]; then
+    status=skip
+  else
+    mkdir -p "$(dirname "$out")"
+    if cwebp -quiet -q "$quality" "$file" -o "$out"; then
+      status=ok
+    else
+      status=fail
+      echo "$file" >>"$faillog"
+    fi
+  fi
+
+  exec 9>>"$lockfile"
+  flock 9
+  n=$(($(cat "$counterfile") + 1))
+  echo "$n" >"$counterfile"
+  flock -u 9
+
+  printf "[%s/%s] %s: %s\n" "$n" "$total" "$status" "$rel"
+' _ {}
+
+failed=$(wc -l <"$faillog")
+echo "Done: $dst"
+if [ "$failed" -gt 0 ]; then
+  echo "Failed: $failed file(s):" >&2
+  cat "$faillog" >&2
+  exit 1
+fi

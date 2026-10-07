@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Launch a Windows .exe through Proton via umu-launcher, without Steam.
+# GAMEID is derived from the exe's filename so each exe gets its own
+# isolated Wine prefix (~/Games/umu/$GAMEID) without a per-exe config.toml.
+# Proton itself is not managed by Nix: fetch/update it with
+#   protonup-rs -q --tool GEProton --version latest --for ~/.local/share/proton-ge
+set -euo pipefail
+
+usage() {
+  echo "Usage: $(basename "$0") <path-to-exe> [umu-run args...]" >&2
+  exit 1
+}
+
+[ $# -ge 1 ] || usage
+exe=$(realpath "$1")
+shift
+[ -f "$exe" ] || { echo "Error: '$exe' not found" >&2; exit 1; }
+
+# Remove executable bit so file managers don't try to run it as a Linux binary
+chmod -x "$exe" 2>/dev/null || true
+
+if [ -z "${PROTONPATH:-}" ]; then
+  proton_dir="$HOME/.local/share/proton-ge"
+  # Use ~/.local/share/proton-ge/default symlink if present, otherwise latest
+  if [ -d "$proton_dir/default" ]; then
+    PROTONPATH=$(realpath "$proton_dir/default")
+  else
+    PROTONPATH=$(find "$proton_dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort -V | tail -n1)
+  fi
+  if [ -z "$PROTONPATH" ]; then
+    echo "Error: no Proton found under $proton_dir" >&2
+    echo "Install one first: protonup-rs -q --tool GEProton --version latest --for '$proton_dir'" >&2
+    exit 1
+  fi
+fi
+
+export GAMEID="umu-$(basename "${exe%.*}")"
+export PROTONPATH
+
+game_name=$(basename "${exe%.*}")
+initial_windows=$(hyprctl -j clients 2>/dev/null | jq 'length' 2>/dev/null || echo "0")
+notif_id=$(notify-send -p --app-name="Proton" --icon=wine \
+  "起動中: $game_name" "しばらくお待ちください...")
+
+# Dismiss notification as soon as a new window appears
+(
+  for _ in $(seq 1 60); do
+    sleep 0.5
+    current=$(hyprctl -j clients 2>/dev/null | jq 'length' 2>/dev/null || echo "0")
+    if [ "$current" -gt "$initial_windows" ]; then
+      notify-send -r "$notif_id" --expire-time=1 "" "" 2>/dev/null
+      break
+    fi
+  done
+) &
+
+exec umu-run "$exe" "$@"
