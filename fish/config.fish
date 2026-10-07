@@ -39,39 +39,6 @@ set -x LANG ja_JP.UTF-8
 set -x DISPLAY :0
 set -x DENO_TLS_CA_STORE system
 
-# NixOS rebuild / home-manager switch helper
-function nrs --description "nixos-rebuild switch with WSL/native auto-detect, or home-manager for server"
-    set -l flake "$HOME/dotfiles"
-    set -l native_flake "$flake#nixos-native"
-
-    if set -q NRS_NATIVE_FLAKE
-        set native_flake "$NRS_NATIVE_FLAKE"
-    else if test -f "$HOME/nixos-local/flake.nix"
-        set native_flake "$HOME/nixos-local#this"
-    end
-
-    # Check for -s flag (server mode)
-    if contains -- -s $argv
-        set -l args (string match -v -- '-s' $argv)
-        home-manager switch --flake $flake#server $args
-        return
-    end
-
-    # Check if running on NixOS
-    if not test -f /etc/NIXOS
-        echo "Error: This is not a NixOS system."
-        echo "Use 'nrs -s' for server (home-manager) or run on NixOS."
-        return 1
-    end
-
-    # Auto-detect WSL/native for NixOS
-    if test (systemd-detect-virt) = "wsl"
-        nix run $flake#switch -- $argv
-    else
-        sudo nixos-rebuild switch --flake $native_flake $argv
-    end
-end
-
 # Load all config files - overrides NixOS default settings
 for file in $__fish_config_dir/config/*.fish
     source $file &

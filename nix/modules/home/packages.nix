@@ -19,11 +19,11 @@
     ripgrep
     fd
     eza
-    yazi
     jq
     chafa
+    file
+    glib
     ouch-rar
-    python313Packages.markitdown
 
     # Languages & Runtimes
     lua
@@ -42,8 +42,7 @@
     claude-code
     codex
 
-    # Bugzilla
-    bugzilla-cli
+    # Cloud storage
     rclone
 
     # Infrastructure & Services

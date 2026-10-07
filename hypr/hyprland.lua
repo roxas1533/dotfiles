@@ -29,8 +29,9 @@ hl.env("QT_STYLE_OVERRIDE", "adwaita-dark")
 ---- AUTOSTART ----
 --------------------
 
+hl.plugin.load(os.getenv("HOME") .. "/.config/hypr/plugins/hyprexpo.so")
+
 hl.on("hyprland.start", function()
-    hl.exec_cmd("hyprctl plugin load " .. os.getenv("HOME") .. "/.config/hypr/plugins/hyprexpo.so")
     hl.exec_cmd(
         "dbus-update-activation-environment --systemd DISPLAY HYPRLAND_INSTANCE_SIGNATURE WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE"
     )
@@ -104,6 +105,16 @@ hl.config({
         sensitivity = 0,
         touchpad = { natural_scroll = false },
     },
+
+    -- Nested keys become plugin:hyprexpo:overview_mode. "grid" because layout is
+    -- "scrolling" above, and auto would then open hyprexpo's scrolling overview,
+    -- which renders workspaces squashed and ignores every pointer event -- leaving
+    -- no way to drag a window to another workspace.
+    plugin = {
+        hyprexpo = {
+            overview_mode = "grid",
+        },
+    },
 })
 
 --------------------
@@ -153,6 +164,7 @@ hl.bind(mainMod .. " + G", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pin())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("rbw-pick"))
 hl.bind(mainMod .. " + TAB", function()
     return hl.plugin.hyprexpo.expo("toggle")
 end)
